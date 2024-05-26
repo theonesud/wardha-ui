@@ -35,6 +35,13 @@ module.exports = {
         customBlue: '#1E3A8A',
         customGreen: '#10B981',
         customGray: '#6B7280',
+        headerText: '#204040',
+        customCyan: '#70CACB',
+        customIndigo: '#160042',
+        customDarkGrey: '#333333'
+      },
+      borderWidth: {
+        '0.6': '0.6px',
       },
     },
   },
