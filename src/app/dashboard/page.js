@@ -53,13 +53,14 @@ const Dashboard = () => {
         <br /> How can we help?
       </div>
       <div className="flex flex-col gap-4 mt-2 w-full">
-        {options.map((option) => (
+        {options.map((option,id) => (
           <DashboardOption
             image={option.image}
             heading={option.heading}
             description={option.description}
             handleClick={option.handleClick}
             buttonText={option.buttonText}
+            key={id}
           />
         ))}
       </div>

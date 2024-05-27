@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from './button'
+import Image from 'next/image'
 
 const DashboardOption = ({image, heading, description, buttonText, handleClick}) => {
     console.log(image)
