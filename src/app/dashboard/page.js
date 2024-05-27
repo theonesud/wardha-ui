@@ -5,7 +5,7 @@ import logo from "@/app/assets/images/logo.png";
 import chat from "../assets/svg/chat-with-ai.svg";
 import scan from "../assets/svg/scan.svg";
 import talk from "../assets/svg/talk-to-human.svg";
-import DashboardOption from "../components/DashboardOption";
+import DashboardOption from "@/app/components/dashboardOption";
 import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
