@@ -132,8 +132,8 @@ const AiChat = () => {
                     <div className="flex flex-row flex-wrap gap-6">
 
                     {msg.images.map((image, idx) => (
-                      <Link href={image.url} >
-                      <div key={idx} className="w-[150px] border rounded-md p-2 font-light">
+                      <Link href={image.url} key={idx}>
+                      <div  className="w-[150px] border rounded-md p-2 font-light">
                         <img src={image.featured_image} alt="Product" width={150} height={150} />
                         <div className="text-[12px] font-medium">{image.title}</div>
                         <div className="text-wrap text-[12px]">{image.benefits}</div>
