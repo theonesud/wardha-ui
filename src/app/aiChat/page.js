@@ -9,6 +9,7 @@ import dot from "../assets/svg/aiDot.svg";
 import SuggestionContainer from "../components/suggestionContainer";
 import Loader from "../components/loader";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const AiChat = () => {
   const router = useRouter();
@@ -49,12 +50,28 @@ const AiChat = () => {
     const data = await res.json();
     setLoading(false);
     setThreadId(data.thread_id);
-    addBotMessage(data.response, data.suggestions);
+    addBotMessage(data.response, data.suggestions, data?.products);
+    
+  };
+  const handleRefresh = () => {
+    const initialMessage = {
+      type: 1,
+      message: "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
+      suggestions: [],
+    };
+    setMessagesList([initialMessage]);
+    setThreadId("");
+    setMessage("");
   };
 
-  const addBotMessage = (response, suggestions) => {
+  console.log(messagesList, 'messagesList');
+
+  const addBotMessage = (response, suggestions, products) => {
     let currentIndex = 0;
-    const botMessage = { type: 1, message: "", suggestions: suggestions || [] };
+    const botMessage = {
+      type: 1, message: "", suggestions: suggestions || [],
+      images: products ? products : null,
+    };
 
     const typingEffect = setInterval(() => {
       if (currentIndex < response?.length) {
@@ -68,23 +85,20 @@ const AiChat = () => {
         clearInterval(typingEffect);
       }
     }, 25);
-    
+
     setMessagesList((prevMessagesList) => [...prevMessagesList, botMessage]);
   };
-
+  console.log(messagesList, 'messagesList');
   return (
     <div className="h-screen flex flex-col bg-[#F4FBFB]">
       {/* Header */}
       <div className="sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
-          <div onClick={() => {router.push('/dashboard')}}>
+          <div onClick={() => { router.push('/dashboard') }}>
             <Image src={backArrow} alt="back" />
           </div>
           <div
-            onClick={() => {
-              setMessagesList([]);
-              setThreadId("");
-            }}
+            onClick={handleRefresh}
           >
             <Image src={refresh} alt="refresh" />
           </div>
@@ -97,23 +111,48 @@ const AiChat = () => {
         {messagesList.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${
-              msg.type === 0 ? "justify-end" : "justify-start"
-            } mb-2`}
+            className={`flex ${msg.type === 0 ? "justify-end" : "justify-start"
+              } mb-2`}
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
                 <div className="flex gap-4 font-light">
                   <div>
-                    <Image src={dot} alt="dot"/>
+                    <Image src={dot} alt="dot" />
                   </div>
                   <div className="text-xs text-black opacity-60">
                     Wardah AI Assistant -
                   </div>
                 </div>
-                <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
-                  {msg.message}
-                </div>
+                {msg.images && msg.images.length > 0 ? (
+                  <div className="flex flex-col gap-2">
+                    <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
+                      Based on your skin type these are the suggested products
+                    </div>
+                    <div className="flex flex-row flex-wrap gap-6">
+
+                    {msg.images.map((image, idx) => (
+                      <Link href={image.url} >
+                      <div key={idx} className="w-[150px] border rounded-md p-2 font-light">
+                        <img src={image.featured_image} alt="Product" width={150} height={150} />
+                        <div className="text-[12px] font-medium">{image.title}</div>
+                        <div className="text-wrap text-[12px]">{image.benefits}</div>
+                      </div>
+                      </Link>
+                    ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
+                    {msg.message}
+                  </div>
+                )
+                }
+
+
+    
+
+
                 {msg.suggestions && msg.suggestions.length > 0 && (
                   <div className="flex flex-wrap gap-2 mx-4 max-w-[80%]">
                     {msg.suggestions.map((suggestion, idx) => (
