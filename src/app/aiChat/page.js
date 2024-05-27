@@ -103,7 +103,7 @@ const AiChat = () => {
               <div className="flex flex-col items-start">
                 <div className="flex gap-4 font-light">
                   <div>
-                    <Image src={dot} />
+                    <Image src={dot} alt="dot"/>
                   </div>
                   <div className="text-xs text-black opacity-60">
                     Wardah AI Assistant -

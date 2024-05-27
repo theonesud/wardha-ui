@@ -7,7 +7,7 @@ const DashboardOption = ({image, heading, description, buttonText, handleClick})
     <div className='border-0.6 border-customCyan rounded-[0.6px] p-5'>
         <div className='flex items-start justify-start gap-4'>
             <div className=' bg-white p-2 rounded-[4px]'>
-                <img src={image.src} className='w-8 object-cover' />
+                <Image src={image.src} className='w-8 object-cover' alt="image"/>
             </div>
             <div className='flex flex-col gap-1 items-start justify-start'>
                 <div className='text-sm font-light text-customIndigo'>{heading}</div>
