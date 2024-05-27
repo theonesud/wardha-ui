@@ -45,8 +45,8 @@ const Dashboard = () => {
   ];
   return (
     <div className="bg-[#D0EEEE] min-h-screen p-4 pt-10 max-w-[100vw] overflow-x-hidden">
-      <div className="w-full">
-        <Image src={logo} alt="logo" className="w-[120px] " />
+      <div className="w-full ">
+        <Image src={logo} alt="logo" />
       </div>
       <div className=" text-headerText font-medium text-3xl leading-10 mt-14 mb-5">
         Hello there.

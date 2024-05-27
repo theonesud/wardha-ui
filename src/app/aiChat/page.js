@@ -7,9 +7,11 @@ import cam from "../assets/svg/cam.svg";
 import send from "../assets/svg/send.svg";
 import dot from "../assets/svg/aiDot.svg";
 import SuggestionContainer from "../components/suggestionContainer";
-import Loader from "../components/loader"; // Assume you have a loader component
+import Loader from "../components/loader";
+import { useRouter } from "next/navigation";
 
 const AiChat = () => {
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
@@ -75,7 +77,7 @@ const AiChat = () => {
       {/* Header */}
       <div className="sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
-          <div>
+          <div onClick={() => {router.push('/dashboard')}}>
             <Image src={backArrow} alt="back" />
           </div>
           <div
