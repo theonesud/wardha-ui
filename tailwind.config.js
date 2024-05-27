@@ -27,8 +27,7 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
-      colors: {
-        
+      colors: {  
         primary: '#3490dc',
         secondary: '#ffed4a',
         danger: '#e3342f',
@@ -38,7 +37,9 @@ module.exports = {
         headerText: '#204040',
         customCyan: '#70CACB',
         customIndigo: '#160042',
-        customDarkGrey: '#333333'
+        customDarkGrey: '#333333',
+        aiChatBg: '#E6E6E6',
+        suggestionsBorder: '#488182'
       },
       borderWidth: {
         '0.6': '0.6px',
