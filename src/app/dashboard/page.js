@@ -5,7 +5,7 @@ import logo from "@/app/assets/images/logo.png";
 import chat from "../assets/svg/chat-with-ai.svg";
 import scan from "../assets/svg/scan.svg";
 import talk from "../assets/svg/talk-to-human.svg";
-import DashboardOption from "../components/dashboardOption";
+import DashboardOption from "../components/DashboardOption";
 import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
@@ -29,7 +29,7 @@ const Dashboard = () => {
         "Scan your product and get instant details or ask any questions about it.",
       buttonText: "Scan a Product",
       handleClick: () => {
-        router.push("/scan");
+        router.push("/scanProduct"); // Navigate to ScanProduct component
       },
     },
     {
@@ -48,12 +48,12 @@ const Dashboard = () => {
       <div className="w-full ">
         <Image src={logo} alt="logo" />
       </div>
-      <div className=" text-headerText font-medium text-3xl leading-10 mt-14 mb-5">
+      <div className="text-headerText font-medium text-3xl leading-10 mt-14 mb-5">
         Hello there.
         <br /> How can we help?
       </div>
       <div className="flex flex-col gap-4 mt-2 w-full">
-        {options.map((option,id) => (
+        {options.map((option, id) => (
           <DashboardOption
             image={option.image}
             heading={option.heading}
