@@ -224,7 +224,7 @@ const AiChat = ({searchParams}) => {
                   <div className="mt-2">
                     {msg.images.map((image, idx) => (
                       <div key={idx} className="w-[150px] p-2 font-light">
-                        <img src={image} alt="Captured" width={150} height={150} />
+                        <img src={image} alt="Captured" width={150}  />
                       </div>
                     ))}
                   </div>
