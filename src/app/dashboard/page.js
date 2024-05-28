@@ -49,7 +49,7 @@ const Dashboard = () => {
       // handleClick: () => {
       //   router.push("/talkWithHuman");
       // },
-      href: '/talkWithHuman'
+      href: '/humanChat'
     },
   ];
   return (
