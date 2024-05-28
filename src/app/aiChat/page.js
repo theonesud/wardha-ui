@@ -21,8 +21,6 @@ const AiChat = ({searchParams}) => {
   const [loading, setLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
 
-  console.log(router.query, 'ljdsflj')
-
   useEffect(() => {
     const initialMessage = {
       type: 1,
@@ -55,7 +53,7 @@ const AiChat = ({searchParams}) => {
 
     const data = await res.json();
     setLoading(false);
-    setThreadId(data.thread_id);
+    setThreadId(data.thread_id || threadId );
     addBotMessage(data.response, data.suggestions, data?.products);
   };
   const handleRefresh = () => {
@@ -217,7 +215,7 @@ const AiChat = ({searchParams}) => {
             
             {msg.type === 0 && (
               <div className="flex flex-col items-end">
-                <div className="rounded-2xl drop-shadow-md text-center bg-white mx-2 px-4 py-2 max-w-[80%] text-base font-light text-black">
+                <div className="rounded-2xl drop-shadow-md  bg-white mx-2 px-4 py-2  text-base font-light text-black">
                   {msg.message}
                 </div>
                 {msg.images && msg.images.length > 0 && (
