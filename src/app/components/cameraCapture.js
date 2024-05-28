@@ -4,10 +4,12 @@ import Upload from "../assets/svg/upload.svg";
 import Capture from "../assets/svg/capture.svg";
 import Toggle from "../assets/svg/toggle.svg";
 import Close from "../assets/svg/close.svg";
+import UploadFromDevice from "../assets/svg/uploadFromDevice.svg";
 
 const CameraCapture = ({ onCapture, onClose }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState("user");
@@ -72,6 +74,18 @@ const CameraCapture = ({ onCapture, onClose }) => {
     }
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCapturedImage(reader.result);
+        onCapture(file);
+      };
+      setCapturedImage(reader.readAsDataURL(file));
+    }
+  };
+
   return (
     <div className="camera-overlay">
       {capturedImage ? (
@@ -131,6 +145,18 @@ const CameraCapture = ({ onCapture, onClose }) => {
                 <img src={Capture.src} />
               </div>
               {/* <div className="text-sm font-light text-suggestionsBorder">Upload</div> */}
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <div className=" cursor-pointer w-20 h-20 flex items-center justify-center rounded-full bg-black opacity-60"onClick={() => fileInputRef.current.click()}>
+                <img src={UploadFromDevice.src} />
+              </div>
+              <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
             </div>
           </div>
         </>
