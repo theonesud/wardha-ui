@@ -23,7 +23,7 @@ const WebcamCapture = () => {
     return (
       <>
         {devices.filter((device, index) => index == deviceId).map((device, index) => (
-            <div>
+            <div key={index}>
               <Webcam audio={false} videoConstraints={{ deviceId: device.deviceId }} />
               <button onClick={() => setDeviceId(deviceId < devices.length - 1 ? deviceId + 1 : 0)}>Click</button>
             </div>
