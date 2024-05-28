@@ -11,31 +11,35 @@ const CameraCapture = ({ onCapture, onClose }) => {
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState("user");
-  console.log(stream, capturedImage);
 
   useEffect(() => {
-    const startCamera = async () => {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode },
-        });
-        setStream(mediaStream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
+    if(!capturedImage) {
+      const startCamera = async () => {
+        if (stream) {
+          // Stop the existing stream
+          stream.getTracks().forEach((track) => track.stop());
         }
-      } catch (err) {
-        console.error("Error accessing camera: ", err);
-      }
-    };
-
-    startCamera();
-
-    return () => {
-      if (stream) {
-        console.log("dsfjdlsf");
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
+        try {
+          const mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode },
+          });
+          setStream(mediaStream);
+          if (videoRef.current) {
+            videoRef.current.srcObject = mediaStream;
+          }
+        } catch (err) {
+          console.error("Error accessing camera: ", err);
+        }
+      };
+  
+      startCamera();
+  
+      return () => {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
+      };
+    }
   }, [facingMode, capturedImage]);
 
   const handleCaptureClick = () => {
@@ -107,8 +111,7 @@ const CameraCapture = ({ onCapture, onClose }) => {
             ref={canvasRef}
             width={640}
             height={480}
-         
-            style={{ display: "none"}}
+            style={{ display: "none" }}
           ></canvas>
           <div className="button-container flex items-center justify-center gap-10">
             <div className="flex flex-col items-center gap-3">
