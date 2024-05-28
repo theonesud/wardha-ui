@@ -78,7 +78,7 @@ const AiChat = ({searchParams}) => {
       type: 1,
       message: "",
       suggestions: suggestions || [],
-      images: products ? products : null,
+      image: products ? products : null,
     };
 
     const typingEffect = setInterval(() => {
@@ -175,20 +175,20 @@ const AiChat = ({searchParams}) => {
                       Based on your skin type these are the suggested products
                     </div>
                     <div className="flex flex-row flex-wrap gap-6">
-                      {msg.images.map((image, idx) => (
-                        <Link href={image.url} key={idx}>
+                      {msg.image.map((img, idx) => (
+                        <Link href={img.url} key={idx}>
                           <div className="w-[150px] border rounded-md p-2 font-light">
                             <img
-                              src={image.featured_image}
+                              src={img.featured_image}
                               alt="Product"
                               width={150}
                               height={150}
                             />
                             <div className="text-[12px] font-medium">
-                              {image.title}
+                              {img.title}
                             </div>
                             <div className="text-wrap text-[12px]">
-                              {image.benefits}
+                              {img.benefits}
                             </div>
                           </div>
                         </Link>
@@ -214,23 +214,21 @@ const AiChat = ({searchParams}) => {
                 )}
               </div>
             )}
+            
             {msg.type === 0 && (
-              <div className="rounded-2xl drop-shadow-md bg-white px-4 py-2 max-w-[80%] text-base font-light text-black">
-                {msg.images.map((image, idx) => (
-                        <div key={idx}>
-                          <div className="w-[150px] p-2 font-light">
-                            <img
-                              src={image}
-                              alt="Product"
-                              width={150}
-                              height={150}
-                            />
-                            <div className="text-[12px] font-medium">
-                              {msg.message}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+              <div className="flex flex-col items-end">
+                <div className="rounded-2xl drop-shadow-md text-center bg-white mx-2 px-4 py-2 max-w-[80%] text-base font-light text-black">
+                  {msg.message}
+                </div>
+                {msg.images && msg.images.length > 0 && (
+                  <div className="mt-2">
+                    {msg.images.map((image, idx) => (
+                      <div key={idx} className="w-[150px] p-2 font-light">
+                        <img src={image} alt="Captured" width={150} height={150} />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
