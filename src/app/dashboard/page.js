@@ -21,6 +21,7 @@ const Dashboard = () => {
       handleClick: () => {
         router.push("/aiChat");
       },
+      href: '/aiChat'
     },
     {
       image: scan,
@@ -28,9 +29,16 @@ const Dashboard = () => {
       description:
         "Scan your product and get instant details or ask any questions about it.",
       buttonText: "Scan a Product",
-      handleClick: () => {
-        router.push("/scanProduct"); // Navigate to ScanProduct component
-      },
+      // handleClick: () => {
+      //   router.push({
+      //     pathname: "/aiChat",
+      //     query: { data: true },
+      //   });
+      // },
+      href: {
+        pathname: "/aiChat",
+        query: { isScan: true },
+      }
     },
     {
       image: talk,
@@ -38,9 +46,10 @@ const Dashboard = () => {
       description:
         "Consult our Virtual Beauty Advisor for expert insights tailored to your skin.",
       buttonText: "Chat",
-      handleClick: () => {
-        router.push("/talkWithHuman");
-      },
+      // handleClick: () => {
+      //   router.push("/talkWithHuman");
+      // },
+      href: '/talkWithHuman'
     },
   ];
   return (
@@ -58,7 +67,8 @@ const Dashboard = () => {
             image={option.image}
             heading={option.heading}
             description={option.description}
-            handleClick={option.handleClick}
+            // handleClick={option.handleClick}
+            href={option.href}
             buttonText={option.buttonText}
             key={id}
           />

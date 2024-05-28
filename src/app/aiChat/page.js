@@ -10,18 +10,24 @@ import SuggestionContainer from "../components/suggestionContainer";
 import Loader from "../components/loader";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import CameraCapture from "../components/cameraCapture";
 
-const AiChat = () => {
+const AiChat = ({searchParams}) => {
+  console.log(searchParams)
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
+
+  console.log(router.query, 'ljdsflj')
 
   useEffect(() => {
     const initialMessage = {
       type: 1,
-      message: "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
+      message:
+        "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -51,12 +57,12 @@ const AiChat = () => {
     setLoading(false);
     setThreadId(data.thread_id);
     addBotMessage(data.response, data.suggestions, data?.products);
-    
   };
   const handleRefresh = () => {
     const initialMessage = {
       type: 1,
-      message: "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
+      message:
+        "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -64,12 +70,14 @@ const AiChat = () => {
     setMessage("");
   };
 
-  console.log(messagesList, 'messagesList');
+  console.log(messagesList, "messagesList");
 
   const addBotMessage = (response, suggestions, products) => {
     let currentIndex = 0;
     const botMessage = {
-      type: 1, message: "", suggestions: suggestions || [],
+      type: 1,
+      message: "",
+      suggestions: suggestions || [],
       images: products ? products : null,
     };
 
@@ -88,18 +96,54 @@ const AiChat = () => {
 
     setMessagesList((prevMessagesList) => [...prevMessagesList, botMessage]);
   };
-  console.log(messagesList, 'messagesList');
+
+  const handleCapture = (file) => {
+    setIsCameraOpen(false);
+    setMessagesList([
+      ...messagesList,
+      { type: 0, message: "Photo captured", images: [URL.createObjectURL(file)] },
+    ]);
+
+    const formData = new FormData();
+    formData.append("file", file, "captured.jpeg");
+
+    fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/scan", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        response.json.then(res => console.log(res)).catch(err => console.log(err))
+      })
+      .then((data) => {
+        console.log("Scan result:", data);
+      })
+      .catch((error) => {
+        console.error("Error during file upload:", error);
+      });
+  };
+
   return (
     <div className="h-screen flex flex-col bg-[#F4FBFB]">
+      {isCameraOpen && (
+        <CameraCapture
+          onCapture={handleCapture}
+          onClose={() => setIsCameraOpen(false)}
+        />
+      )}
       {/* Header */}
       <div className="sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
-          <div onClick={() => { router.push('/dashboard') }}>
+          <div
+            onClick={() => {
+              router.push("/dashboard");
+            }}
+          >
             <Image src={backArrow} alt="back" />
           </div>
-          <div
-            onClick={handleRefresh}
-          >
+          <div onClick={handleRefresh}>
             <Image src={refresh} alt="refresh" />
           </div>
         </div>
@@ -111,8 +155,9 @@ const AiChat = () => {
         {messagesList.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${msg.type === 0 ? "justify-end" : "justify-start"
-              } mb-2`}
+            className={`flex ${
+              msg.type === 0 ? "justify-end" : "justify-start"
+            } mb-2`}
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
@@ -130,28 +175,31 @@ const AiChat = () => {
                       Based on your skin type these are the suggested products
                     </div>
                     <div className="flex flex-row flex-wrap gap-6">
-
-                    {msg.images.map((image, idx) => (
-                      <Link href={image.url} key={idx}>
-                      <div  className="w-[150px] border rounded-md p-2 font-light">
-                        <img src={image.featured_image} alt="Product" width={150} height={150} />
-                        <div className="text-[12px] font-medium">{image.title}</div>
-                        <div className="text-wrap text-[12px]">{image.benefits}</div>
-                      </div>
-                      </Link>
-                    ))}
+                      {msg.images.map((image, idx) => (
+                        <Link href={image.url} key={idx}>
+                          <div className="w-[150px] border rounded-md p-2 font-light">
+                            <img
+                              src={image.featured_image}
+                              alt="Product"
+                              width={150}
+                              height={150}
+                            />
+                            <div className="text-[12px] font-medium">
+                              {image.title}
+                            </div>
+                            <div className="text-wrap text-[12px]">
+                              {image.benefits}
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 ) : (
                   <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
                     {msg.message}
                   </div>
-                )
-                }
-
-
-    
-
+                )}
 
                 {msg.suggestions && msg.suggestions.length > 0 && (
                   <div className="flex flex-wrap gap-2 mx-4 max-w-[80%]">
@@ -168,7 +216,21 @@ const AiChat = () => {
             )}
             {msg.type === 0 && (
               <div className="rounded-2xl drop-shadow-md bg-white px-4 py-2 max-w-[80%] text-base font-light text-black">
-                {msg.message}
+                {msg.images.map((image, idx) => (
+                        <div key={idx}>
+                          <div className="w-[150px] p-2 font-light">
+                            <img
+                              src={image}
+                              alt="Product"
+                              width={150}
+                              height={150}
+                            />
+                            <div className="text-[12px] font-medium">
+                              {msg.message}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
               </div>
             )}
           </div>
@@ -182,7 +244,7 @@ const AiChat = () => {
 
       {/* Input Area */}
       <div className="bg-white flex items-center gap-4 p-3 px-4 shadow-md sticky bottom-0">
-        <div>
+        <div onClick={() => setIsCameraOpen(true)}>
           <Image src={cam} alt="cam" />
         </div>
         <div className="relative flex-grow">
@@ -203,6 +265,6 @@ const AiChat = () => {
       </div>
     </div>
   );
-}
+};
 
 export default AiChat;

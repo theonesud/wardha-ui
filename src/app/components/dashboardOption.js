@@ -1,10 +1,11 @@
 import React from 'react'
 import Button from './button'
+import Link from 'next/link'
 
-const DashboardOption = ({image, heading, description, buttonText, handleClick}) => {
+const DashboardOption = ({href, image, heading, description, buttonText, handleClick}) => {
     console.log(image)
   return (
-    <div className='border-0.6 border-customCyan rounded-[0.6px] p-5'>
+    <Link href={href} className='border-0.6 border-customCyan rounded-[0.6px] p-5'>
         <div className='flex items-start justify-start gap-4'>
             <div className=' bg-white p-2 rounded-[4px]'>
                 <img src={image.src} className='w-8 object-cover' alt="image"/>
@@ -18,7 +19,7 @@ const DashboardOption = ({image, heading, description, buttonText, handleClick})
             <Button text={buttonText} onClick={handleClick} color='bg-[#067A6F]' textColor='text-white' size='sm' additionalClasses='w-32' />
             {/* <Button text={buttonText} onClick={handleClick} additionalClasses='w-[280px]' /> */}
         </div>
-    </div>
+    </Link>
   )
 }
 
