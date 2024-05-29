@@ -31,30 +31,47 @@ const AiChat = ({ searchParams }) => {
     setMessagesList([initialMessage]);
   }, []);
 
-  const makeApiCall = async (messageText) => {
-    const userMessage = messageText || message;
-    setMessagesList([...messagesList, { type: 0, message: userMessage }]);
-    setMessage("");
-    setLoading(true);
+  const makeApiCall = async (messageText, showResponse = false) => {
+    console.log(showResponse, "showResponse")
+    if (showResponse) {
+      const res = await fetch(
+        "https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            thread_id: threadId,
+            question: JSON.stringify(messageText),
+          })
+        }
+      );
+    } else {
+      const userMessage = messageText || message;
+      setMessagesList([...messagesList, { type: 0, message: userMessage }]);
+      setMessage("");
+      setLoading(true);
 
-    const res = await fetch(
-      "https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          thread_id: threadId,
-          question: userMessage,
-        }),
-      }
-    );
+      const res = await fetch(
+        "https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            thread_id: threadId,
+            question: userMessage,
+          }),
+        }
+      );
 
-    const data = await res.json();
-    setLoading(false);
-    setThreadId(data.thread_id || threadId);
-    addBotMessage(data.response, data.suggestions, data?.products);
+      const data = await res.json();
+      setLoading(false);
+      setThreadId(data.thread_id || threadId);
+      addBotMessage(data.response, data.suggestions, data?.products);
+    }
   };
 
   const handleRefresh = () => {
@@ -118,11 +135,13 @@ const AiChat = ({ searchParams }) => {
         return response.json()
       })
       .then((res) => {
+        makeApiCall(res, true)
         console.log(res, 'lkfjdslkf')
         setLoading(false);
         setThreadId(res.thread_id || threadId);
         addBotMessage("", [], [{ featured_image: res.image_url, title: res.product_name, benefits: res.benefits, url: res.product_url, description: res.description }]);
         console.log("Scan result:", data);
+
       })
       .catch((error) => {
         console.error("Error during file upload:", error);
