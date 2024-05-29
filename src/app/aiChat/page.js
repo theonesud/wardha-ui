@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import backArrow from "../assets/svg/barrow.svg";
 import Image from "next/image";
 import refresh from "../assets/svg/refresh.svg";
@@ -13,13 +13,23 @@ import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 
 const AiChat = ({ searchParams }) => {
-  console.log(searchParams)
+  console.log(searchParams);
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
   const [loading, setLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
+
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
+    }
+  }, [message]);
 
   useEffect(() => {
     const initialMessage = {
@@ -32,7 +42,7 @@ const AiChat = ({ searchParams }) => {
   }, []);
 
   const makeApiCall = async (messageText, showResponse = false) => {
-    console.log(showResponse, "showResponse")
+    console.log(showResponse, "showResponse");
     if (showResponse) {
       const res = await fetch(
         "https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask",
@@ -44,7 +54,7 @@ const AiChat = ({ searchParams }) => {
           body: JSON.stringify({
             thread_id: threadId,
             question: JSON.stringify(messageText),
-          })
+          }),
         }
       );
       const data = await res.json();
@@ -111,9 +121,9 @@ const AiChat = ({ searchParams }) => {
       }
     }, 0.5);
 
-    if(botMessage?.image){
-      console.log(botMessage.image, "botMessage")
-      makeApiCall(botMessage.image, true)
+    if (botMessage?.image) {
+      console.log(botMessage.image, "botMessage");
+      makeApiCall(botMessage.image, true);
     }
 
     setMessagesList((prevMessagesList) => [...prevMessagesList, botMessage]);
@@ -123,7 +133,11 @@ const AiChat = ({ searchParams }) => {
     setIsCameraOpen(false);
     setMessagesList([
       ...messagesList,
-      { type: 0, message: "Photo captured", images: [URL.createObjectURL(file)] },
+      {
+        type: 0,
+        message: "Photo captured",
+        images: [URL.createObjectURL(file)],
+      },
     ]);
     setLoading(true);
     const formData = new FormData();
@@ -134,20 +148,31 @@ const AiChat = ({ searchParams }) => {
       body: formData,
     })
       .then((response) => {
-        console.log(response, 'lkfjdslkf')
+        console.log(response, "lkfjdslkf");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        return response.json()
+        return response.json();
       })
       .then((res) => {
-        makeApiCall(res, true)
-        console.log(res, 'lkfjdslkf')
+        makeApiCall(res, true);
+        console.log(res, "lkfjdslkf");
         setLoading(false);
         setThreadId(res.thread_id || threadId);
-        addBotMessage("", [], [{ featured_image: res.image_url, title: res.product_name, benefits: res.benefits, url: res.product_url, description: res.description }]);
+        addBotMessage(
+          "",
+          [],
+          [
+            {
+              featured_image: res.image_url,
+              title: res.product_name,
+              benefits: res.benefits,
+              url: res.product_url,
+              description: res.description,
+            },
+          ]
+        );
         console.log("Scan result:", data);
-
       })
       .catch((error) => {
         console.error("Error during file upload:", error);
@@ -184,8 +209,9 @@ const AiChat = ({ searchParams }) => {
         {messagesList.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${msg.type === 0 ? "justify-end" : "justify-start"
-              } mb-2`}
+            className={`flex ${
+              msg.type === 0 ? "justify-end" : "justify-start"
+            } mb-2`}
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
@@ -198,8 +224,7 @@ const AiChat = ({ searchParams }) => {
                   </div>
                 </div>
                 {msg.image && msg.image.length > 0 ? (
-                  <div className="flex flex-col gap-2">
-
+                  <div className="flex flex-col gap-2 mx-5 my-2">
                     <div className="flex flex-row flex-wrap gap-6">
                       {msg.image.map((img, idx) => (
                         <Link href={img.url} target="_blank" key={idx}>
@@ -242,8 +267,11 @@ const AiChat = ({ searchParams }) => {
             )}
 
             {msg.type === 0 && (
-              <div className="flex flex-col items-end">
-                <div className="rounded-2xl drop-shadow-md  bg-white mx-2 px-4 py-2  text-base font-light text-black">
+              <div className="flex flex-col items-end overflow-x-hidden">
+                {/* <div className="rounded-2xl drop-shadow-md  bg-white mx-2 px-4 py-2  text-base font-light text-black">
+                  {msg.message}
+                </div> */}
+                <div className="rounded-2xl break-words bg-white px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
                   {msg.message}
                 </div>
                 {msg.images && msg.images.length > 0 && (
@@ -261,13 +289,13 @@ const AiChat = ({ searchParams }) => {
         ))}
         {loading && (
           // <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[20%]">
-            <Loader />
+          <Loader />
           // </div>
         )}
       </div>
 
       {/* Input Area */}
-      <div className="bg-white flex items-center gap-4 p-3 px-4 shadow-md sticky bottom-0">
+      {/* <div className="bg-white flex items-center gap-4 p-3 px-4 shadow-md sticky bottom-0">
         <div onClick={() => setIsCameraOpen(true)}>
           <Image src={cam} alt="cam" />
         </div>
@@ -286,6 +314,33 @@ const AiChat = ({ searchParams }) => {
             <Image src={send} alt="send" />
           </div>
         </div>
+      </div> */}
+      <div className="w-screen flex items-end justify-center gap-4 py-4 px-5 bg-white">
+        <textarea
+          ref={textareaRef}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          type="text"
+          placeholder="Type a message"
+          className=" w-full h-auto  flex-1 outline-none focus:outline-none resize-none bg-none no-scrollbar"
+          rows={1}
+        />
+        {!message ? (
+          <div
+            onClick={() => setIsCameraOpen(true)}
+            className=" w-10 h-10 cursor-pointer"
+          >
+            <Image src={cam} alt="cam" />
+          </div>
+        ) : (
+          <div
+            onClick={() => makeApiCall()}
+            // className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            className="w-10 h-10 cursor-pointer"
+          >
+            <Image src={send} alt="send" />
+          </div>
+        )}
       </div>
     </div>
   );
