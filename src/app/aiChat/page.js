@@ -25,7 +25,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
+        "Welcome to Wardah! I'm your AI assistant, here to help you with all your skincare needs. Whether you're looking for the perfect product, need help finding the right skincare routine, or have questions about any of our products, I'm here to assist you. How can I assist you today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -68,7 +68,6 @@ const AiChat = ({ searchParams }) => {
           }),
         }
       );
-
       const data = await res.json();
       setLoading(false);
       setThreadId(data.thread_id || threadId);
@@ -80,7 +79,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "👋 Welcome to Wardah's skincare assistant! How can I help you today?",
+        "Welcome to Wardah! I'm your AI assistant, here to help you with all your skincare needs. Whether you're looking for the perfect product, need help finding the right skincare routine, or have questions about any of our products, I'm here to assist you. How can I assist you today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -110,8 +109,8 @@ const AiChat = ({ searchParams }) => {
       } else {
         clearInterval(typingEffect);
       }
-    }, 25);
-    
+    }, 0.5);
+
     if(botMessage?.image){
       console.log(botMessage.image, "botMessage")
       makeApiCall(botMessage.image, true)
@@ -200,7 +199,7 @@ const AiChat = ({ searchParams }) => {
                 </div>
                 {msg.image && msg.image.length > 0 ? (
                   <div className="flex flex-col gap-2">
-                    
+
                     <div className="flex flex-row flex-wrap gap-6">
                       {msg.image.map((img, idx) => (
                         <Link href={img.url} target="_blank" key={idx}>
@@ -261,9 +260,9 @@ const AiChat = ({ searchParams }) => {
           </div>
         ))}
         {loading && (
-          <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[20%] ">
+          // <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[20%]">
             <Loader />
-          </div>
+          // </div>
         )}
       </div>
 
