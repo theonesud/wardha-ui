@@ -110,7 +110,7 @@ const CameraCapture = ({ onCapture, onClose }) => {
           <canvas
             ref={canvasRef}
             width={640}
-            height={480}
+            height={620}
             style={{ display: "none" }}
           ></canvas>
           <div className="button-container flex items-center justify-center gap-10">
