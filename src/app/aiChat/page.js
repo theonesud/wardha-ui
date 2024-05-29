@@ -25,7 +25,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "Welcome to Wardah! I'm your AI assistant, here to help you with all your skincare needs. Whether you're looking for the perfect product, need help finding the right skincare routine, or have questions about any of our products, I'm here to assist you. How can I assist you today?",
+        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -79,7 +79,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "Welcome to Wardah! I'm your AI assistant, here to help you with all your skincare needs. Whether you're looking for the perfect product, need help finding the right skincare routine, or have questions about any of our products, I'm here to assist you. How can I assist you today?",
+        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
