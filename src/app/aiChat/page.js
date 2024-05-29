@@ -22,12 +22,14 @@ const AiChat = ({ searchParams }) => {
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
 
   const textareaRef = useRef(null);
+  const chatEndRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height =
         textareaRef.current.scrollHeight + "px";
+      textareaRef.current.focus();
     }
   }, [message]);
 
@@ -35,11 +37,19 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
+        "👋 Welcome to the Wardah Beauty Virtual Advisor! How can I assist you today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
   }, []);
+
+  useEffect(() => {
+    // Auto scroll to the bottom when messagesList changes
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messagesList]);
+
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
@@ -89,7 +99,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
+        "👋 Welcome to the Wardah Beauty Virtual Advisor! How can I assist you today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -97,7 +107,6 @@ const AiChat = ({ searchParams }) => {
     setMessage("");
   };
 
-  console.log(messagesList, "messagesList");
 
   const addBotMessage = (response, suggestions, products) => {
     let currentIndex = 0;
@@ -253,7 +262,7 @@ const AiChat = ({ searchParams }) => {
                 )}
 
                 {msg.suggestions && msg.suggestions.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mx-4 max-w-[80%]">
+                  <div className="flex flex-wrap gap-2 mx-5 max-w-[80%]">
                     {msg.suggestions.map((suggestion, idx) => (
                       <SuggestionContainer
                         key={idx}
@@ -292,6 +301,7 @@ const AiChat = ({ searchParams }) => {
           <Loader />
           // </div>
         )}
+        <div ref={chatEndRef} />
       </div>
 
       {/* Input Area */}
@@ -315,7 +325,7 @@ const AiChat = ({ searchParams }) => {
           </div>
         </div>
       </div> */}
-      <div className="w-screen flex items-end justify-center gap-4 py-4 px-5 bg-white">
+      <div className="w-screen flex items-center border border-[#E6E6E6]  justify-center gap-4 py-4 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}
@@ -328,7 +338,7 @@ const AiChat = ({ searchParams }) => {
         {!message ? (
           <div
             onClick={() => setIsCameraOpen(true)}
-            className=" w-10 h-10 cursor-pointer"
+            className=" w-10 h-10 flex justify-center items-center cursor-pointer"
           >
             <Image src={cam} alt="cam" />
           </div>

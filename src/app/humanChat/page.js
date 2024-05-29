@@ -22,6 +22,7 @@ const TalkToHuman = () => {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height =
       textareaRef.current.scrollHeight + "px";
+      textareaRef.current.focus();
     }
   }, [message]);
 
@@ -151,7 +152,7 @@ const TalkToHuman = () => {
           </div>
         </div>
       </div> */}
-      <div className="w-screen flex items-end justify-center gap-4 py-4 px-5 bg-white">
+      <div className="w-screen flex items-center justify-center gap-4 py-4 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}
@@ -164,7 +165,7 @@ const TalkToHuman = () => {
         {!message ? (
           <div
             onClick={() => setIsCameraOpen(true)}
-            className=" w-10 h-10 cursor-pointer"
+            className=" w-10 h-10 flex justify-center items-center cursor-pointer"
           >
             <Image src={cam} alt="cam" />
           </div>
