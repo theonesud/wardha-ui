@@ -280,7 +280,7 @@ const AiChat = ({ searchParams }) => {
                 {/* <div className="rounded-2xl drop-shadow-md  bg-white mx-2 px-4 py-2  text-base font-light text-black">
                   {msg.message}
                 </div> */}
-                <div className="rounded-2xl break-words bg-white px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
+                <div className="rounded-2xl break-words bg-white px-2 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
                   {msg.message}
                 </div>
                 {msg.images && msg.images.length > 0 && (
@@ -346,7 +346,7 @@ const AiChat = ({ searchParams }) => {
           <div
             onClick={() => makeApiCall()}
             // className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            className="w-10 h-10 cursor-pointer"
+            className="w-10 h-10 flex justify-center items-center cursor-pointer"
           >
             <Image src={send} alt="send" />
           </div>
