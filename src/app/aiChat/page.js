@@ -47,6 +47,8 @@ const AiChat = ({ searchParams }) => {
           })
         }
       );
+      const data = await res.json();
+      setThreadId(data.thread_id || threadId);
     } else {
       const userMessage = messageText || message;
       setMessagesList([...messagesList, { type: 0, message: userMessage }]);
@@ -109,6 +111,11 @@ const AiChat = ({ searchParams }) => {
         clearInterval(typingEffect);
       }
     }, 25);
+    
+    if(botMessage?.image){
+      console.log(botMessage.image, "botMessage")
+      makeApiCall(botMessage.image, true)
+    }
 
     setMessagesList((prevMessagesList) => [...prevMessagesList, botMessage]);
   };
@@ -193,9 +200,7 @@ const AiChat = ({ searchParams }) => {
                 </div>
                 {msg.image && msg.image.length > 0 ? (
                   <div className="flex flex-col gap-2">
-                    <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
-                      Based on your skin type these are the suggested products
-                    </div>
+                    
                     <div className="flex flex-row flex-wrap gap-6">
                       {msg.image.map((img, idx) => (
                         <Link href={img.url} target="_blank" key={idx}>
