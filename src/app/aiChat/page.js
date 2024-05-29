@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 
-const AiChat = ({searchParams}) => {
+const AiChat = ({ searchParams }) => {
   console.log(searchParams)
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -53,9 +53,10 @@ const AiChat = ({searchParams}) => {
 
     const data = await res.json();
     setLoading(false);
-    setThreadId(data.thread_id || threadId );
+    setThreadId(data.thread_id || threadId);
     addBotMessage(data.response, data.suggestions, data?.products);
   };
+
   const handleRefresh = () => {
     const initialMessage = {
       type: 1,
@@ -101,7 +102,7 @@ const AiChat = ({searchParams}) => {
       ...messagesList,
       { type: 0, message: "Photo captured", images: [URL.createObjectURL(file)] },
     ]);
-
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file, "captured.jpeg");
 
@@ -110,12 +111,17 @@ const AiChat = ({searchParams}) => {
       body: formData,
     })
       .then((response) => {
+        console.log(response, 'lkfjdslkf')
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        response.json.then(res => console.log(res)).catch(err => console.log(err))
+        return response.json()
       })
-      .then((data) => {
+      .then((res) => {
+        console.log(res, 'lkfjdslkf')
+        setLoading(false);
+        setThreadId(res.thread_id || threadId);
+        addBotMessage("", [], [{ featured_image: res.image_url, title: res.product_name, benefits: res.benefits, url: res.product_url, description: res.description }]);
         console.log("Scan result:", data);
       })
       .catch((error) => {
@@ -153,9 +159,8 @@ const AiChat = ({searchParams}) => {
         {messagesList.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${
-              msg.type === 0 ? "justify-end" : "justify-start"
-            } mb-2`}
+            className={`flex ${msg.type === 0 ? "justify-end" : "justify-start"
+              } mb-2`}
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
@@ -174,7 +179,7 @@ const AiChat = ({searchParams}) => {
                     </div>
                     <div className="flex flex-row flex-wrap gap-6">
                       {msg.image.map((img, idx) => (
-                        <Link href={img.url} key={idx}>
+                        <Link href={img.url} target="_blank" key={idx}>
                           <div className="w-[150px] border rounded-md p-2 font-light">
                             <img
                               src={img.featured_image}
@@ -212,7 +217,7 @@ const AiChat = ({searchParams}) => {
                 )}
               </div>
             )}
-            
+
             {msg.type === 0 && (
               <div className="flex flex-col items-end">
                 <div className="rounded-2xl drop-shadow-md  bg-white mx-2 px-4 py-2  text-base font-light text-black">
@@ -222,7 +227,7 @@ const AiChat = ({searchParams}) => {
                   <div className="mt-2">
                     {msg.images.map((image, idx) => (
                       <div key={idx} className="w-[150px] p-2 font-light">
-                        <img src={image} alt="Captured" width={150}  />
+                        <img src={image} alt="Captured" width={150} />
                       </div>
                     ))}
                   </div>
