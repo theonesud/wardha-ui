@@ -54,23 +54,20 @@ const AiChat = ({ searchParams }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (chatAreaRef.current) {
-        chatAreaRef.current.style.height = `calc(100vh - ${
-          document.querySelector(".header").offsetHeight
-        }px - ${
-          document.querySelector(".input-area").offsetHeight
-        }px)`;
+      if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+        const headerHeight = headerRef.current.offsetHeight;
+        const inputHeight = inputAreaRef.current.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        chatAreaRef.current.style.height = `${viewportHeight - headerHeight - inputHeight}px`;
       }
     };
 
     const handleViewportChange = () => {
-      if (chatAreaRef.current) {
+      if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+        const headerHeight = headerRef.current.offsetHeight;
+        const inputHeight = inputAreaRef.current.offsetHeight;
         const visualViewportHeight = window.visualViewport.height;
-        chatAreaRef.current.style.height = `calc(${visualViewportHeight}px - ${
-          document.querySelector(".header").offsetHeight
-        }px - ${
-          document.querySelector(".input-area").offsetHeight
-        }px)`;
+        chatAreaRef.current.style.height = `${visualViewportHeight - headerHeight - inputHeight}px`;
       }
     };
 
