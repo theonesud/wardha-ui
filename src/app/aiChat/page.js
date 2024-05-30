@@ -267,11 +267,19 @@ const AiChat = ({ searchParams }) => {
       </div>
 
       {/* Chat Area */}
-      <div ref={chatAreaRef} className={` ${textareaRef.current ? "h-[30%]": "h-[60%]"} flex-grow  font-sans overflow-y-auto p-3`} style={{ flex: '1 1 auto' }}>
+      <div
+        ref={chatAreaRef}
+        className={`${
+          textareaRef.current ? "h-[30%]" : "h-[60%]"
+        } flex-grow  font-sans overflow-y-auto p-3`}
+        style={{ flex: "1 1 auto" }}
+      >
         {messagesList.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${msg.type === 0 ? "justify-end" : "justify-start"} mb-2`}
+            className={`flex ${
+              msg.type === 0 ? "justify-end" : "justify-start"
+            } mb-2`}
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
@@ -344,14 +352,15 @@ const AiChat = ({ searchParams }) => {
             )}
           </div>
         ))}
-        {loading && (
-          <Loader />
-        )}
+        {loading && <Loader />}
         <div ref={chatEndRef} />
       </div>
 
       {/* Input Area */}
-      <div ref={inputAreaRef} className="input-area h-[20%] w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white">
+      <div
+        ref={inputAreaRef}
+        className="input-area h-[20%] w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white"
+      >
         <textarea
           ref={textareaRef}
           value={message}
@@ -362,11 +371,17 @@ const AiChat = ({ searchParams }) => {
           rows={1}
         />
         {!message ? (
-          <div onClick={() => setIsCameraOpen(true)} className="w-10 h-10 flex justify-center items-center cursor-pointer">
+          <div
+            onClick={() => setIsCameraOpen(true)}
+            className="w-10 h-10 flex justify-center items-center cursor-pointer"
+          >
             <Image src={cam} alt="cam" />
           </div>
         ) : (
-          <div onClick={() => makeApiCall()} className="w-10 h-10 flex justify-center items-center cursor-pointer">
+          <div
+            onClick={() => makeApiCall()}
+            className="w-10 h-10 flex justify-center items-center cursor-pointer"
+          >
             <Image src={send} alt="send" />
           </div>
         )}
