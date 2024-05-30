@@ -61,7 +61,13 @@ const CameraCapture = ({ onCapture, onClose }) => {
         canvasRef.current.height
       );
       const imageDataUrl = canvasRef.current.toDataURL("image/png");
-      setCapturedImage(imageDataUrl);
+      // setCapturedImage(imageDataUrl);
+      fetch(imageDataUrl)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const file = new File([blob], "captured.png", { type: "image/png" });
+          onCapture(file);
+        });
     }
   };
 
@@ -153,16 +159,16 @@ const CameraCapture = ({ onCapture, onClose }) => {
               </div>
             </div>
             <div className="flex flex-col items-center gap-3">
-              <div className=" cursor-pointer w-20 h-20 flex items-center justify-center rounded-full bg-black opacity-60"onClick={() => fileInputRef.current.click()}>
+              <div className=" cursor-pointer w-20 h-20 flex items-center justify-center rounded-full bg-black opacity-60" onClick={() => fileInputRef.current.click()}>
                 <img src={UploadFromDevice.src} />
               </div>
               <input
-                  type="file"
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
             </div>
           </div>
         </>
