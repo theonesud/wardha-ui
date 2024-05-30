@@ -71,9 +71,27 @@ const AiChat = ({ searchParams }) => {
       }
     };
 
+    const handleFocus = () => {
+      if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+        const headerHeight = headerRef.current.offsetHeight;
+        const inputHeight = inputAreaRef.current.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        chatAreaRef.current.style.height = `${(viewportHeight - headerHeight - inputHeight) / 2}px`;
+      }
+    };
+
+    const handleBlur = () => {
+      handleResize();
+    };
+
     window.addEventListener("resize", handleResize);
     window.visualViewport.addEventListener("resize", handleViewportChange);
     window.visualViewport.addEventListener("scroll", handleViewportChange);
+
+    if (textareaRef.current) {
+      textareaRef.current.addEventListener("focus", handleFocus);
+      textareaRef.current.addEventListener("blur", handleBlur);
+    }
 
     handleResize();
     handleViewportChange();
@@ -82,6 +100,11 @@ const AiChat = ({ searchParams }) => {
       window.removeEventListener("resize", handleResize);
       window.visualViewport.removeEventListener("resize", handleViewportChange);
       window.visualViewport.removeEventListener("scroll", handleViewportChange);
+
+      if (textareaRef.current) {
+        textareaRef.current.removeEventListener("focus", handleFocus);
+        textareaRef.current.removeEventListener("blur", handleBlur);
+      }
     };
   }, []);
 
