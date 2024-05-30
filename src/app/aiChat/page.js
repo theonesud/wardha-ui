@@ -42,10 +42,13 @@ const AiChat = ({ searchParams }) => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-      if (textareaRef.current && initialFocus) {
-        textareaRef.current.focus();
-        setInitialFocus(false);  // Prevent future auto-focus
+      if(!searchParams?.isScan){
+        if (textareaRef.current && initialFocus) {
+          textareaRef.current.focus();
+          setInitialFocus(false);  // Prevent future auto-focus
+        }
       }
+      
     
     }
   }, [message,initialFocus]);
