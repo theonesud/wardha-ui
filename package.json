@@ -15,7 +15,8 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "use-detect-keyboard-open": "^0.4.0"
   },
   "devDependencies": {
     "eslint": "^8",

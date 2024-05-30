@@ -12,6 +12,7 @@ import Loader from "../components/loader";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
+import useDetectKeyboardOpen from "use-detect-keyboard-open";
 
 const AiChat = ({ searchParams }) => {
   const router = useRouter();
@@ -21,11 +22,12 @@ const AiChat = ({ searchParams }) => {
   const [loading, setLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
   const textareaRef = useRef(null);
-  const chatEndRef = useRef(null);
+  // const chatEndRef = useRef(null);
   const chatAreaRef = useRef(null);
   const headerRef = useRef(null);
   const inputAreaRef = useRef(null);
   const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
+  const isKeyboardOpen = useDetectKeyboardOpen();
 
   useEffect(() => {
     const initialMessage = {
@@ -47,17 +49,20 @@ const AiChat = ({ searchParams }) => {
   }, [message]);
 
   useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    // if (chatEndRef.current) {
+    //   chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    // }
+    if(isKeyboardOpen){
+      chatAreaRef.current.scrollIntoView({ behavior: "smooth" });
     }
  
   }, [messagesList]);
 
   const handleFocus = () => {
     setIsTextAreaFocused(true);
-    if (chatAreaRef.current) {
-      chatAreaRef.current.scrollTop = 0;
-    }
+    // if (chatAreaRef.current) {
+    //   chatAreaRef.current.scrollTop = 0;
+    // }
   };
 
   const handleBlur = () => {
@@ -66,7 +71,9 @@ const AiChat = ({ searchParams }) => {
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
-
+    if (textareaRef.current) {
+      textareaRef.current.blur();
+  }
     if (showResponse) {
       const res = await fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask", {
         method: "POST",
@@ -103,9 +110,7 @@ const AiChat = ({ searchParams }) => {
     }
 
     // Close the keyboard
-    if (textareaRef.current) {
-      textareaRef.current.blur();
-    }
+    
   };
 
   const handleRefresh = () => {
@@ -136,7 +141,7 @@ const AiChat = ({ searchParams }) => {
       } else {
         clearInterval(typingEffect);
       }
-    }, 50);
+    }, 3);
 
     if (botMessage?.image) {
       console.log(botMessage.image, "botMessage");
@@ -190,15 +195,17 @@ const AiChat = ({ searchParams }) => {
       .catch((error) => {
         console.error("Error during file upload:", error);
       });
+
+
   };
 
   return (
-    <div className={`flex flex-col bg-[#F4FBFB] ${isTextAreaFocused ? 'h-[425px]' : 'min-h-screen'}`}>
+    <div className={`flex flex-col  bg-[#F4FBFB] ${ isKeyboardOpen ? 'h-[425px] ' : 'h-screen'}`}>
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
       {/* Header */}
-      <div ref={headerRef} className="header  sticky top-0 bg-[#F4FBFB] z-10">
+      <div ref={headerRef} className="header  fixed w-full top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
@@ -213,8 +220,8 @@ const AiChat = ({ searchParams }) => {
       {/* Chat Area */}
       <div
         ref={chatAreaRef}
-        className=" flex-grow  font-sans overflow-y-auto p-3"
-        style={{ flex: "1 1 auto" }}
+        className=" flex-grow pt-[129px] font-sans overflow-y-auto p-3"
+       
       >
         {messagesList.map((msg, index) => (
           <div
@@ -222,6 +229,7 @@ const AiChat = ({ searchParams }) => {
             className={`flex ${
               msg.type === 0 ? "justify-end" : "justify-start"
             } mb-2`}
+            
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
@@ -295,13 +303,13 @@ const AiChat = ({ searchParams }) => {
           </div>
         ))}
         {loading && <Loader />}
-        <div ref={chatEndRef} />
+        
       </div>
 
       {/* Input Area */}
       <div
         ref={inputAreaRef}
-        className="input-area w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white"
+        className={`input-area w-screen ${ !isKeyboardOpen && "fixed bottom-0"} flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white`}
       >
         <textarea
           ref={textareaRef}
@@ -323,7 +331,9 @@ const AiChat = ({ searchParams }) => {
           </div>
         ) : (
           <div
-            onClick={() => makeApiCall()}
+            onClick={() => {makeApiCall()
+            textareaRef.current.blur()
+            }}
             className="w-10 h-10 flex justify-center items-center cursor-pointer"
           >
             <Image src={send} alt="send" />
