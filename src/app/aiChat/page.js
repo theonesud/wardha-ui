@@ -81,6 +81,13 @@ const AiChat = ({ searchParams }) => {
         const inputHeight = inputAreaRef.current.offsetHeight;
         const viewportHeight = window.innerHeight;
         chatAreaRef.current.style.height = `${(viewportHeight - headerHeight - inputHeight) / 2}px`;
+
+        if (isIOS) {
+          // Scroll to the bottom on iOS to prevent input from being hidden by the keyboard
+          setTimeout(() => {
+            chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+          }, 300);
+        }
       }
     };
 
@@ -185,7 +192,7 @@ const AiChat = ({ searchParams }) => {
       } else {
         clearInterval(typingEffect);
       }
-    }, 10);
+    }, 50);
 
     if (botMessage?.image) {
       console.log(botMessage.image, "botMessage");
@@ -242,12 +249,12 @@ const AiChat = ({ searchParams }) => {
   };
 
   return (
-    <div className="h-screen flex justify-between flex-col bg-[#F4FBFB]">
+    <div className="h-[100%] flex justify-between flex-col bg-[#F4FBFB]">
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
       {/* Header */}
-      <div ref={headerRef} className="header sticky top-0 bg-[#F4FBFB] z-10">
+      <div ref={headerRef} className="header h-[20%] sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
@@ -260,7 +267,7 @@ const AiChat = ({ searchParams }) => {
       </div>
 
       {/* Chat Area */}
-      <div ref={chatAreaRef} className="flex-grow font-sans overflow-y-auto p-3" style={{ flex: '1 1 auto' }}>
+      <div ref={chatAreaRef} className={` ${textareaRef.current ? "h-[30%]": "h-[60%]"} flex-grow  font-sans overflow-y-auto p-3`} style={{ flex: '1 1 auto' }}>
         {messagesList.map((msg, index) => (
           <div
             key={index}
@@ -344,7 +351,7 @@ const AiChat = ({ searchParams }) => {
       </div>
 
       {/* Input Area */}
-      <div ref={inputAreaRef} className="input-area w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white">
+      <div ref={inputAreaRef} className="input-area h-[20%] w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}
