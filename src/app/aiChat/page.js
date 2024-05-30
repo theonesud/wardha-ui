@@ -37,7 +37,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "👋 Welcome to the Wardah Beauty Virtual Advisor! How can I assist you today?",
+        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -99,7 +99,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "👋 Welcome to the Wardah Beauty Virtual Advisor! How can I assist you today?",
+        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -224,7 +224,7 @@ const AiChat = ({ searchParams }) => {
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
-                <div className="flex gap-4 font-light">
+                <div className="flex items-center gap-2 font-light">
                   <div>
                     <Image src={dot} alt="dot" />
                   </div>
