@@ -19,13 +19,13 @@ const AiChat = ({ searchParams }) => {
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sent,setSent] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
   const chatAreaRef = useRef(null);
   const headerRef = useRef(null);
   const inputAreaRef = useRef(null);
+  const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
 
   useEffect(() => {
     const initialMessage = {
@@ -50,79 +50,23 @@ const AiChat = ({ searchParams }) => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-    // if (textareaRef.current) {
-    //   headerRef.current.scrollIntoView({ behavior: "smooth" });
-    // }
+ 
   }, [messagesList]);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
-  //       const headerHeight = headerRef.current.offsetHeight;
-  //       const inputHeight = inputAreaRef.current.offsetHeight;
-  //       const viewportHeight = window.innerHeight;
-  //       chatAreaRef.current.style.height = `${viewportHeight - headerHeight - inputHeight}px`;
-  //     }
-  //   };
+  const handleFocus = () => {
+    setIsTextAreaFocused(true);
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = 0;
+    }
+  };
 
-  //   const handleViewportChange = () => {
-  //     if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
-  //       const headerHeight = headerRef.current.offsetHeight;
-  //       const inputHeight = inputAreaRef.current.offsetHeight;
-  //       const visualViewportHeight = window.visualViewport.height;
-  //       chatAreaRef.current.style.height = `${visualViewportHeight - headerHeight - inputHeight}px`;
-  //     }
-  //   };
-
-  //   const handleFocus = () => {
-  //     if (isMobile && chatAreaRef.current && headerRef.current && inputAreaRef.current) {
-  //       const headerHeight = headerRef.current.offsetHeight;
-  //       const inputHeight = inputAreaRef.current.offsetHeight;
-  //       const viewportHeight = window.innerHeight;
-  //       chatAreaRef.current.style.height = `${(viewportHeight - headerHeight - inputHeight) / 2}px`;
-
-  //       if (isIOS) {
-  //         // Scroll to the bottom on iOS to prevent input from being hidden by the keyboard
-  //         setTimeout(() => {
-  //           chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-  //         }, 3000);
-  //       }
-  //     }
-  //   };
-
-  //   const handleBlur = () => {
-  //     if (isMobile) {
-  //       handleResize();
-  //     }
-  //   };
-
-  //   window.addEventListener("resize", handleResize);
-  //   window.visualViewport.addEventListener("resize", handleViewportChange);
-  //   window.visualViewport.addEventListener("scroll", handleViewportChange);
-
-  //   if (textareaRef.current) {
-  //     textareaRef.current.addEventListener("focus", handleFocus);
-  //     textareaRef.current.addEventListener("blur", handleBlur);
-  //   }
-
-  //   handleResize();
-  //   handleViewportChange();
-
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //     window.visualViewport.removeEventListener("resize", handleViewportChange);
-  //     window.visualViewport.removeEventListener("scroll", handleViewportChange);
-
-  //     if (textareaRef.current) {
-  //       textareaRef.current.removeEventListener("focus", handleFocus);
-  //       textareaRef.current.removeEventListener("blur", handleBlur);
-  //     }
-  //   };
-  // }, []);
+  const handleBlur = () => {
+    setIsTextAreaFocused(false);
+  };
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
-    setSent(true);
+
     if (showResponse) {
       const res = await fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask", {
         method: "POST",
@@ -249,7 +193,7 @@ const AiChat = ({ searchParams }) => {
   };
 
   return (
-    <div className="min-h-screen flex justify-between flex-col bg-[#F4FBFB]">
+    <div className={`flex flex-col bg-[#F4FBFB] ${isTextAreaFocused ? 'h-[425px]' : 'min-h-screen'}`}>
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
@@ -362,6 +306,8 @@ const AiChat = ({ searchParams }) => {
         <textarea
           ref={textareaRef}
           value={message}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onChange={(e) => setMessage(e.target.value)}
           type="text"
           placeholder="Type a message"
