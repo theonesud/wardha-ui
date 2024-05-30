@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { isMobile } from "react-device-detect";
+import { isMobile, isIOS } from "react-device-detect";
 import backArrow from "../assets/svg/barrow.svg";
 import Image from "next/image";
 import refresh from "../assets/svg/refresh.svg";
@@ -27,24 +27,30 @@ const AiChat = ({ searchParams }) => {
   const inputAreaRef = useRef(null);
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
-      textareaRef.current.focus();
-    }
-  }, [message]);
-
-  useEffect(() => {
     const initialMessage = {
       type: 1,
       message: "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
+
+    if (isMobile && textareaRef.current) {
+      // Focus the input field on mobile devices
+      textareaRef.current.focus();
+    }
   }, []);
 
   useEffect(() => {
-    // Auto scroll to the bottom when messagesList changes
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      if (isMobile && textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }
+  }, [message]);
+
+  useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -144,6 +150,11 @@ const AiChat = ({ searchParams }) => {
       setThreadId(data.thread_id || threadId);
       addBotMessage(data.response, data.suggestions, data?.products);
     }
+
+    // Close the keyboard
+    if (textareaRef.current) {
+      textareaRef.current.blur();
+    }
   };
 
   const handleRefresh = () => {
@@ -174,7 +185,7 @@ const AiChat = ({ searchParams }) => {
       } else {
         clearInterval(typingEffect);
       }
-    }, 50);
+    }, 10);
 
     if (botMessage?.image) {
       console.log(botMessage.image, "botMessage");
@@ -233,19 +244,12 @@ const AiChat = ({ searchParams }) => {
   return (
     <div className="h-screen flex justify-between flex-col bg-[#F4FBFB]">
       {isCameraOpen && (
-        <CameraCapture
-          onCapture={handleCapture}
-          onClose={() => setIsCameraOpen(false)}
-        />
+        <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
       {/* Header */}
       <div ref={headerRef} className="header sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
-          <div
-            onClick={() => {
-              router.push("/dashboard");
-            }}
-          >
+          <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
           </div>
           <div onClick={handleRefresh}>
@@ -260,9 +264,7 @@ const AiChat = ({ searchParams }) => {
         {messagesList.map((msg, index) => (
           <div
             key={index}
-            className={`flex ${
-              msg.type === 0 ? "justify-end" : "justify-start"
-            } mb-2`}
+            className={`flex ${msg.type === 0 ? "justify-end" : "justify-start"} mb-2`}
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
@@ -319,9 +321,6 @@ const AiChat = ({ searchParams }) => {
 
             {msg.type === 0 && (
               <div className="flex flex-col items-end overflow-x-hidden">
-                {/* <div className="rounded-2xl drop-shadow-md  bg-white mx-2 px-4 py-2  text-base font-light text-black">
-                  {msg.message}
-                </div> */}
                 <div className="rounded-2xl break-words bg-white px-2 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
                   {msg.message}
                 </div>
@@ -339,38 +338,28 @@ const AiChat = ({ searchParams }) => {
           </div>
         ))}
         {loading && (
-       
           <Loader />
-         
         )}
         <div ref={chatEndRef} />
       </div>
 
       {/* Input Area */}
-     
-      <div  ref={inputAreaRef} className="input-area w-screen flex items-center border border-[#E6E6E6]  justify-center gap-4 py-4 px-5 bg-white">
+      <div ref={inputAreaRef} className="input-area w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           type="text"
           placeholder="Type a message"
-          className=" w-full h-auto  flex-1 outline-none focus:outline-none resize-none bg-none no-scrollbar"
+          className="w-full h-auto flex-1 outline-none focus:outline-none resize-none bg-none no-scrollbar"
           rows={1}
         />
         {!message ? (
-          <div
-            onClick={() => setIsCameraOpen(true)}
-            className=" w-10 h-10 flex justify-center items-center cursor-pointer"
-          >
+          <div onClick={() => setIsCameraOpen(true)} className="w-10 h-10 flex justify-center items-center cursor-pointer">
             <Image src={cam} alt="cam" />
           </div>
         ) : (
-          <div
-            onClick={() => makeApiCall()}
-            // className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            className="w-10 h-10 flex justify-center items-center cursor-pointer"
-          >
+          <div onClick={() => makeApiCall()} className="w-10 h-10 flex justify-center items-center cursor-pointer">
             <Image src={send} alt="send" />
           </div>
         )}
