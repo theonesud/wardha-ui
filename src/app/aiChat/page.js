@@ -13,22 +13,24 @@ import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 
 const AiChat = ({ searchParams }) => {
-  console.log(searchParams);
+ 
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
   const [loading, setLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
-
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
+  const chatAreaRef = useRef(null);
+  const headerRef = useRef(null);
+  const inputAreaRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + "px";
+      textareaRef.current.scrollHeight + "px";
       textareaRef.current.focus();
     }
   }, [message]);
@@ -50,6 +52,41 @@ const AiChat = ({ searchParams }) => {
     }
   }, [messagesList]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (chatAreaRef.current) {
+        chatAreaRef.current.style.height = `calc(100vh - ${
+          document.querySelector(".header").offsetHeight
+        }px - ${
+          document.querySelector(".input-area").offsetHeight
+        }px)`;
+      }
+    };
+
+    const handleViewportChange = () => {
+      if (chatAreaRef.current) {
+        const visualViewportHeight = window.visualViewport.height;
+        chatAreaRef.current.style.height = `calc(${visualViewportHeight}px - ${
+          document.querySelector(".header").offsetHeight
+        }px - ${
+          document.querySelector(".input-area").offsetHeight
+        }px)`;
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.visualViewport.addEventListener("resize", handleViewportChange);
+    window.visualViewport.addEventListener("scroll", handleViewportChange);
+
+    handleResize();
+    handleViewportChange();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.visualViewport.removeEventListener("resize", handleViewportChange);
+      window.visualViewport.removeEventListener("scroll", handleViewportChange);
+    };
+  }, []);
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
@@ -197,7 +234,7 @@ const AiChat = ({ searchParams }) => {
         />
       )}
       {/* Header */}
-      <div className="sticky top-0 bg-[#F4FBFB] z-10">
+      <div ref={headerRef} className="header sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
           <div
             onClick={() => {
@@ -214,7 +251,7 @@ const AiChat = ({ searchParams }) => {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-grow font-sans overflow-y-auto p-3">
+      <div ref={chatAreaRef} className="flex-grow font-sans overflow-y-auto p-3" style={{ flex: '1 1 auto' }}>
         {messagesList.map((msg, index) => (
           <div
             key={index}
@@ -224,7 +261,7 @@ const AiChat = ({ searchParams }) => {
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
-                <div className="flex items-center gap-2 font-light">
+                <div className="flex gap-4 justify-center items-center font-light">
                   <div>
                     <Image src={dot} alt="dot" />
                   </div>
@@ -325,7 +362,7 @@ const AiChat = ({ searchParams }) => {
           </div>
         </div>
       </div> */}
-      <div className="w-screen flex items-center border border-[#E6E6E6]  justify-center gap-4 py-4 px-5 bg-white">
+      <div  ref={inputAreaRef} className="input-area w-screen flex items-center border border-[#E6E6E6]  justify-center gap-4 py-4 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}
