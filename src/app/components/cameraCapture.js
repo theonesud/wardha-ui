@@ -33,7 +33,7 @@ const CameraCapture = ({ onCapture, onClose }) => {
           // Automatically capture the image after 3 seconds
           setTimeout(() => {
             handleCaptureClick();
-          }, 3000);
+          }, 5000);
 
         } catch (err) {
           console.error("Error accessing camera: ", err);
@@ -51,16 +51,18 @@ const CameraCapture = ({ onCapture, onClose }) => {
   }, [facingMode, capturedImage]);
 
   const handleCaptureClick = () => {
-    const context = canvasRef.current.getContext("2d");
-    context.drawImage(
-      videoRef.current,
-      0,
-      0,
-      canvasRef.current.width,
-      canvasRef.current.height
-    );
-    const imageDataUrl = canvasRef.current.toDataURL("image/png");
-    setCapturedImage(imageDataUrl);
+    if (canvasRef.current) {
+      const context = canvasRef.current.getContext("2d");
+      context.drawImage(
+        videoRef.current,
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
+      const imageDataUrl = canvasRef.current.toDataURL("image/png");
+      setCapturedImage(imageDataUrl);
+    }
   };
 
   const handleToggleCamera = () => {
@@ -88,7 +90,7 @@ const CameraCapture = ({ onCapture, onClose }) => {
         setCapturedImage(reader.result);
         onCapture(file);
       };
-      setCapturedImage(reader.readAsDataURL(file));
+      reader.readAsDataURL(file); // Corrected this line
     }
   };
 
