@@ -254,7 +254,7 @@ const AiChat = ({ searchParams }) => {
   };
 
   return (
-    <div className={`${textareaRef.current  ? "h-[50%]" : "h-[100%]"}  flex justify-between flex-col bg-[#F4FBFB]"`}>
+    <div className={`${textareaRef.current  ? "h-[50%] overflow-y-auto" : "h-[100%]"}  flex justify-between flex-col bg-[#F4FBFB]"`}>
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
