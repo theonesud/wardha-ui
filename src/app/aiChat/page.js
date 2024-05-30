@@ -48,15 +48,15 @@ const AiChat = ({ searchParams }) => {
     }
   }, [message]);
 
-  useEffect(() => {
-    // if (chatEndRef.current) {
-    //   chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-    // }
-    if(isKeyboardOpen){
-      chatAreaRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+  // useEffect(() => {
+  //   if (chatEndRef.current) {
+  //     chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  //   if(isKeyboardOpen){
+  //     chatAreaRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
  
-  }, [messagesList]);
+  // }, [messagesList]);
 
   const handleFocus = () => {
     setIsTextAreaFocused(true);
