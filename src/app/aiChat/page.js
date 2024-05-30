@@ -22,6 +22,7 @@ const AiChat = ({ searchParams }) => {
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
+  const chatAreaRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -49,6 +50,24 @@ const AiChat = ({ searchParams }) => {
     }
   }, [messagesList]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (chatAreaRef.current) {
+        chatAreaRef.current.style.height = `calc(100vh - ${
+          document.querySelector(".header").offsetHeight
+        }px - ${
+          document.querySelector(".input-area").offsetHeight
+        }px)`;
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
