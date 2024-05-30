@@ -19,6 +19,7 @@ const AiChat = ({ searchParams }) => {
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sent,setSent] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
@@ -55,7 +56,7 @@ const AiChat = ({ searchParams }) => {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
     if (isMobile && textareaRef.current) {
-      headerRef.current.focus();
+      headerRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messagesList]);
 
@@ -126,6 +127,7 @@ const AiChat = ({ searchParams }) => {
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
+    setSent(true);
     if (showResponse) {
       const res = await fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask", {
         method: "POST",
@@ -273,7 +275,7 @@ const AiChat = ({ searchParams }) => {
       <div
         ref={chatAreaRef}
         className={`${
-          textareaRef.current ? "h-[30%]" : "h-[60%]"
+          textareaRef.current  ? "h-[30%]" : "h-[60%]"
         } flex-grow  font-sans overflow-y-auto p-3`}
         style={{ flex: "1 1 auto" }}
       >
