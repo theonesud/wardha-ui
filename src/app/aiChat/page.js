@@ -249,7 +249,7 @@ const AiChat = ({ searchParams }) => {
   };
 
   return (
-    <div className={`${textareaRef.current? "h-[40%]": " min-h-screen"} flex justify-between flex-col bg-[#F4FBFB]`}>
+    <div className={`${ textareaRef.current ? "h-[500px]": " h-[930px]"}  flex justify-between flex-col bg-[#F4FBFB]`}>
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
