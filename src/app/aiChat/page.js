@@ -34,20 +34,15 @@ const AiChat = ({ searchParams }) => {
       suggestions: [],
     };
     setMessagesList([initialMessage]);
-
-    if (isMobile && textareaRef.current) {
-      // Focus the input field on mobile devices
-      textareaRef.current.focus();
-    }
   }, []);
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-      if (isMobile && textareaRef.current) {
+
         textareaRef.current.focus();
-      }
+    
     }
   }, [message]);
 
@@ -55,75 +50,75 @@ const AiChat = ({ searchParams }) => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-    if (textareaRef.current) {
-      headerRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    // if (textareaRef.current) {
+    //   headerRef.current.scrollIntoView({ behavior: "smooth" });
+    // }
   }, [messagesList]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
-        const headerHeight = headerRef.current.offsetHeight;
-        const inputHeight = inputAreaRef.current.offsetHeight;
-        const viewportHeight = window.innerHeight;
-        chatAreaRef.current.style.height = `${viewportHeight - headerHeight - inputHeight}px`;
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+  //       const headerHeight = headerRef.current.offsetHeight;
+  //       const inputHeight = inputAreaRef.current.offsetHeight;
+  //       const viewportHeight = window.innerHeight;
+  //       chatAreaRef.current.style.height = `${viewportHeight - headerHeight - inputHeight}px`;
+  //     }
+  //   };
 
-    const handleViewportChange = () => {
-      if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
-        const headerHeight = headerRef.current.offsetHeight;
-        const inputHeight = inputAreaRef.current.offsetHeight;
-        const visualViewportHeight = window.visualViewport.height;
-        chatAreaRef.current.style.height = `${visualViewportHeight - headerHeight - inputHeight}px`;
-      }
-    };
+  //   const handleViewportChange = () => {
+  //     if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+  //       const headerHeight = headerRef.current.offsetHeight;
+  //       const inputHeight = inputAreaRef.current.offsetHeight;
+  //       const visualViewportHeight = window.visualViewport.height;
+  //       chatAreaRef.current.style.height = `${visualViewportHeight - headerHeight - inputHeight}px`;
+  //     }
+  //   };
 
-    const handleFocus = () => {
-      if (isMobile && chatAreaRef.current && headerRef.current && inputAreaRef.current) {
-        const headerHeight = headerRef.current.offsetHeight;
-        const inputHeight = inputAreaRef.current.offsetHeight;
-        const viewportHeight = window.innerHeight;
-        chatAreaRef.current.style.height = `${(viewportHeight - headerHeight - inputHeight) / 2}px`;
+  //   const handleFocus = () => {
+  //     if (isMobile && chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+  //       const headerHeight = headerRef.current.offsetHeight;
+  //       const inputHeight = inputAreaRef.current.offsetHeight;
+  //       const viewportHeight = window.innerHeight;
+  //       chatAreaRef.current.style.height = `${(viewportHeight - headerHeight - inputHeight) / 2}px`;
 
-        if (isIOS) {
-          // Scroll to the bottom on iOS to prevent input from being hidden by the keyboard
-          setTimeout(() => {
-            chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-          }, 3000);
-        }
-      }
-    };
+  //       if (isIOS) {
+  //         // Scroll to the bottom on iOS to prevent input from being hidden by the keyboard
+  //         setTimeout(() => {
+  //           chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+  //         }, 3000);
+  //       }
+  //     }
+  //   };
 
-    const handleBlur = () => {
-      if (isMobile) {
-        handleResize();
-      }
-    };
+  //   const handleBlur = () => {
+  //     if (isMobile) {
+  //       handleResize();
+  //     }
+  //   };
 
-    window.addEventListener("resize", handleResize);
-    window.visualViewport.addEventListener("resize", handleViewportChange);
-    window.visualViewport.addEventListener("scroll", handleViewportChange);
+  //   window.addEventListener("resize", handleResize);
+  //   window.visualViewport.addEventListener("resize", handleViewportChange);
+  //   window.visualViewport.addEventListener("scroll", handleViewportChange);
 
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener("focus", handleFocus);
-      textareaRef.current.addEventListener("blur", handleBlur);
-    }
+  //   if (textareaRef.current) {
+  //     textareaRef.current.addEventListener("focus", handleFocus);
+  //     textareaRef.current.addEventListener("blur", handleBlur);
+  //   }
 
-    handleResize();
-    handleViewportChange();
+  //   handleResize();
+  //   handleViewportChange();
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.visualViewport.removeEventListener("resize", handleViewportChange);
-      window.visualViewport.removeEventListener("scroll", handleViewportChange);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //     window.visualViewport.removeEventListener("resize", handleViewportChange);
+  //     window.visualViewport.removeEventListener("scroll", handleViewportChange);
 
-      if (textareaRef.current) {
-        textareaRef.current.removeEventListener("focus", handleFocus);
-        textareaRef.current.removeEventListener("blur", handleBlur);
-      }
-    };
-  }, []);
+  //     if (textareaRef.current) {
+  //       textareaRef.current.removeEventListener("focus", handleFocus);
+  //       textareaRef.current.removeEventListener("blur", handleBlur);
+  //     }
+  //   };
+  // }, []);
 
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
@@ -254,12 +249,12 @@ const AiChat = ({ searchParams }) => {
   };
 
   return (
-    <div className={`${textareaRef.current  ? "h-[50%] overflow-y-auto" : "h-[100%]"}  flex justify-between flex-col bg-[#F4FBFB]"`}>
+    <div className=" flex justify-between flex-col bg-[#F4FBFB]">
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
       {/* Header */}
-      <div ref={headerRef} className={`header ${textareaRef.current ? "h-[10%]":"h-[20%]"} sticky top-0 bg-[#F4FBFB] z-10`}>
+      <div ref={headerRef} className="header  sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
@@ -274,9 +269,7 @@ const AiChat = ({ searchParams }) => {
       {/* Chat Area */}
       <div
         ref={chatAreaRef}
-        className={`${
-          textareaRef.current  ? "h-[30%]" : "h-[60%]"
-        } flex-grow  font-sans overflow-y-auto p-3`}
+        className=" flex-grow  font-sans overflow-y-auto p-3"
         style={{ flex: "1 1 auto" }}
       >
         {messagesList.map((msg, index) => (
