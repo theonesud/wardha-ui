@@ -86,7 +86,7 @@ const AiChat = ({ searchParams }) => {
           // Scroll to the bottom on iOS to prevent input from being hidden by the keyboard
           setTimeout(() => {
             chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-          }, 300);
+          }, 3000);
         }
       }
     };
