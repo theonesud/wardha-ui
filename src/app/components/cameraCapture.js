@@ -15,7 +15,7 @@ const CameraCapture = ({ onCapture, onClose }) => {
   const [facingMode, setFacingMode] = useState("user");
 
   useEffect(() => {
-    if(!capturedImage) {
+    if (!capturedImage) {
       const startCamera = async () => {
         if (stream) {
           // Stop the existing stream
@@ -29,13 +29,19 @@ const CameraCapture = ({ onCapture, onClose }) => {
           if (videoRef.current) {
             videoRef.current.srcObject = mediaStream;
           }
+
+          // Automatically capture the image after 3 seconds
+          setTimeout(() => {
+            handleCaptureClick();
+          }, 3000);
+
         } catch (err) {
           console.error("Error accessing camera: ", err);
         }
       };
-  
+
       startCamera();
-  
+
       return () => {
         if (stream) {
           stream.getTracks().forEach((track) => track.stop());
@@ -135,7 +141,6 @@ const CameraCapture = ({ onCapture, onClose }) => {
               >
                 <img src={Toggle.src} />
               </div>
-              {/* <div className="text-sm font-light text-suggestionsBorder">Click again</div> */}
             </div>
             <div className="flex flex-col items-center gap-3">
               <div
@@ -144,7 +149,6 @@ const CameraCapture = ({ onCapture, onClose }) => {
               >
                 <img src={Capture.src} />
               </div>
-              {/* <div className="text-sm font-light text-suggestionsBorder">Upload</div> */}
             </div>
             <div className="flex flex-col items-center gap-3">
               <div className=" cursor-pointer w-20 h-20 flex items-center justify-center rounded-full bg-black opacity-60"onClick={() => fileInputRef.current.click()}>

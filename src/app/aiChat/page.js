@@ -39,7 +39,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "👋 Welcome to the Wardah Beauty Virtual Advisor! How can I assist you today?",
+        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -136,7 +136,7 @@ const AiChat = ({ searchParams }) => {
     const initialMessage = {
       type: 1,
       message:
-        "👋 Welcome to the Wardah Beauty Virtual Advisor! How can I assist you today?",
+        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
