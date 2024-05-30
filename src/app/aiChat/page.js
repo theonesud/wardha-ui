@@ -254,12 +254,12 @@ const AiChat = ({ searchParams }) => {
   };
 
   return (
-    <div className="h-[100%] flex justify-between flex-col bg-[#F4FBFB]">
+    <div className={`${textareaRef.current  ? "h-[50%]" : "h-[100%]"}  flex justify-between flex-col bg-[#F4FBFB]"`}>
       {isCameraOpen && (
         <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
       )}
       {/* Header */}
-      <div ref={headerRef} className="header h-[20%] sticky top-0 bg-[#F4FBFB] z-10">
+      <div ref={headerRef} className={`header ${textareaRef.current ? "h-[10%]":"h-[20%]"} sticky top-0 bg-[#F4FBFB] z-10`}>
         <div className="flex justify-between px-3 pt-3">
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
@@ -364,7 +364,7 @@ const AiChat = ({ searchParams }) => {
       {/* Input Area */}
       <div
         ref={inputAreaRef}
-        className="input-area h-[20%] w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white"
+        className="input-area w-screen flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white"
       >
         <textarea
           ref={textareaRef}
