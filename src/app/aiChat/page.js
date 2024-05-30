@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { isMobile } from "react-device-detect";
 import backArrow from "../assets/svg/barrow.svg";
 import Image from "next/image";
 import refresh from "../assets/svg/refresh.svg";
@@ -13,7 +14,6 @@ import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 
 const AiChat = ({ searchParams }) => {
- 
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
@@ -29,8 +29,7 @@ const AiChat = ({ searchParams }) => {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height =
-      textareaRef.current.scrollHeight + "px";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
       textareaRef.current.focus();
     }
   }, [message]);
@@ -38,8 +37,7 @@ const AiChat = ({ searchParams }) => {
   useEffect(() => {
     const initialMessage = {
       type: 1,
-      message:
-        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
+      message: "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
@@ -72,7 +70,7 @@ const AiChat = ({ searchParams }) => {
     };
 
     const handleFocus = () => {
-      if (chatAreaRef.current && headerRef.current && inputAreaRef.current) {
+      if (isMobile && chatAreaRef.current && headerRef.current && inputAreaRef.current) {
         const headerHeight = headerRef.current.offsetHeight;
         const inputHeight = inputAreaRef.current.offsetHeight;
         const viewportHeight = window.innerHeight;
@@ -81,7 +79,9 @@ const AiChat = ({ searchParams }) => {
     };
 
     const handleBlur = () => {
-      handleResize();
+      if (isMobile) {
+        handleResize();
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -111,19 +111,16 @@ const AiChat = ({ searchParams }) => {
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
     if (showResponse) {
-      const res = await fetch(
-        "https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            thread_id: threadId,
-            question: JSON.stringify(messageText),
-          }),
-        }
-      );
+      const res = await fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          thread_id: threadId,
+          question: JSON.stringify(messageText),
+        }),
+      });
       const data = await res.json();
       setThreadId(data.thread_id || threadId);
     } else {
@@ -132,19 +129,16 @@ const AiChat = ({ searchParams }) => {
       setMessage("");
       setLoading(true);
 
-      const res = await fetch(
-        "https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            thread_id: threadId,
-            question: userMessage,
-          }),
-        }
-      );
+      const res = await fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          thread_id: threadId,
+          question: userMessage,
+        }),
+      });
       const data = await res.json();
       setLoading(false);
       setThreadId(data.thread_id || threadId);
@@ -155,15 +149,13 @@ const AiChat = ({ searchParams }) => {
   const handleRefresh = () => {
     const initialMessage = {
       type: 1,
-      message:
-        "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
+      message: "Thank you for visiting our store! 😊 How can I help with your skincare needs today?",
       suggestions: [],
     };
     setMessagesList([initialMessage]);
     setThreadId("");
     setMessage("");
   };
-
 
   const addBotMessage = (response, suggestions, products) => {
     let currentIndex = 0;
@@ -177,15 +169,12 @@ const AiChat = ({ searchParams }) => {
     const typingEffect = setInterval(() => {
       if (currentIndex < response?.length) {
         botMessage.message += response[currentIndex];
-        setMessagesList((prevMessagesList) => [
-          ...prevMessagesList.slice(0, -1),
-          botMessage,
-        ]);
+        setMessagesList((prevMessagesList) => [...prevMessagesList.slice(0, -1), botMessage]);
         currentIndex++;
       } else {
         clearInterval(typingEffect);
       }
-    }, 0.5);
+    }, 50);
 
     if (botMessage?.image) {
       console.log(botMessage.image, "botMessage");
@@ -225,20 +214,16 @@ const AiChat = ({ searchParams }) => {
         console.log(res, "lkfjdslkf");
         setLoading(false);
         setThreadId(res.thread_id || threadId);
-        addBotMessage(
-          "",
-          [],
-          [
-            {
-              featured_image: res.image_url,
-              title: res.product_name,
-              benefits: res.benefits,
-              url: res.product_url,
-              description: res.description,
-            },
-          ]
-        );
-        console.log("Scan result:", data);
+        addBotMessage("", [], [
+          {
+            featured_image: res.image_url,
+            title: res.product_name,
+            benefits: res.benefits,
+            url: res.product_url,
+            description: res.description,
+          },
+        ]);
+        console.log("Scan result:", res);
       })
       .catch((error) => {
         console.error("Error during file upload:", error);
