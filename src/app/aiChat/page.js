@@ -54,6 +54,9 @@ const AiChat = ({ searchParams }) => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
+    if (isMobile && textareaRef.current) {
+      headerRef.current.focus();
+    }
   }, [messagesList]);
 
   useEffect(() => {
