@@ -23,6 +23,8 @@ const AiChat = ({ searchParams }) => {
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
   const chatAreaRef = useRef(null);
+  const headerRef = useRef(null);
+  const inputAreaRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -61,11 +63,28 @@ const AiChat = ({ searchParams }) => {
       }
     };
 
+    const handleViewportChange = () => {
+      if (chatAreaRef.current) {
+        const visualViewportHeight = window.visualViewport.height;
+        chatAreaRef.current.style.height = `calc(${visualViewportHeight}px - ${
+          document.querySelector(".header").offsetHeight
+        }px - ${
+          document.querySelector(".input-area").offsetHeight
+        }px)`;
+      }
+    };
+
     window.addEventListener("resize", handleResize);
+    window.visualViewport.addEventListener("resize", handleViewportChange);
+    window.visualViewport.addEventListener("scroll", handleViewportChange);
+
     handleResize();
+    handleViewportChange();
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.visualViewport.removeEventListener("resize", handleViewportChange);
+      window.visualViewport.removeEventListener("scroll", handleViewportChange);
     };
   }, []);
 
@@ -215,7 +234,7 @@ const AiChat = ({ searchParams }) => {
         />
       )}
       {/* Header */}
-      <div className="sticky top-0 bg-[#F4FBFB] z-10">
+      <div ref={headerRef} className="header sticky top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
           <div
             onClick={() => {
@@ -232,7 +251,7 @@ const AiChat = ({ searchParams }) => {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-grow font-sans overflow-y-auto p-3" style={{ flex: '1 1 auto' }}>
+      <div ref={chatAreaRef} className="flex-grow font-sans overflow-y-auto p-3" style={{ flex: '1 1 auto' }}>
         {messagesList.map((msg, index) => (
           <div
             key={index}
@@ -343,7 +362,7 @@ const AiChat = ({ searchParams }) => {
           </div>
         </div>
       </div> */}
-      <div className="w-screen flex items-center border border-[#E6E6E6]  justify-center gap-4 py-4 px-5 bg-white">
+      <div  ref={inputAreaRef} className="input-area w-screen flex items-center border border-[#E6E6E6]  justify-center gap-4 py-4 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}
