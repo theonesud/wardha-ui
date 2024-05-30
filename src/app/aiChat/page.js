@@ -13,14 +13,13 @@ import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 
 const AiChat = ({ searchParams }) => {
-  console.log(searchParams);
+ 
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [threadId, setThreadId] = useState("");
   const [loading, setLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
-
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
 
@@ -28,7 +27,7 @@ const AiChat = ({ searchParams }) => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + "px";
+      textareaRef.current.scrollHeight + "px";
       textareaRef.current.focus();
     }
   }, [message]);
@@ -214,7 +213,7 @@ const AiChat = ({ searchParams }) => {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-grow font-sans overflow-y-auto p-3">
+      <div className="flex-grow font-sans overflow-y-auto p-3" style={{ flex: '1 1 auto' }}>
         {messagesList.map((msg, index) => (
           <div
             key={index}
@@ -224,7 +223,7 @@ const AiChat = ({ searchParams }) => {
           >
             {msg.type === 1 && (
               <div className="flex flex-col items-start">
-                <div className="flex gap-4 font-light">
+                <div className="flex gap-4 justify-center items-center font-light">
                   <div>
                     <Image src={dot} alt="dot" />
                   </div>

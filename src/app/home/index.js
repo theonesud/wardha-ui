@@ -14,7 +14,7 @@ const HomePage = () => {
         router.push('/dashboard')
     }
     return (
-        <div className='flex flex-col justify-center items-center gap-10 mt-14'>
+        <div className='flex flex-col justify-center items-center gap-10 '>
             <div className='flex justify-center '>
                 <Image src={logo} alt="logo" className="w-40 " />
             </div>
