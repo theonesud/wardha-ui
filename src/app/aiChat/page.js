@@ -22,13 +22,13 @@ const AiChat = ({ searchParams }) => {
   const [loading, setLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(searchParams?.isScan);
   const textareaRef = useRef(null);
-  // const chatEndRef = useRef(null);
+  const chatEndRef = useRef(null);
   const chatAreaRef = useRef(null);
   const headerRef = useRef(null);
   const inputAreaRef = useRef(null);
   const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
   const isKeyboardOpen = useDetectKeyboardOpen();
-
+  const [initialFocus, setInitialFocus] = useState(true);
   useEffect(() => {
     const initialMessage = {
       type: 1,
@@ -42,21 +42,23 @@ const AiChat = ({ searchParams }) => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-
+      if (textareaRef.current && initialFocus) {
         textareaRef.current.focus();
+        setInitialFocus(false);  // Prevent future auto-focus
+      }
     
     }
-  }, [message]);
+  }, [message,initialFocus]);
 
-  // useEffect(() => {
-  //   if (chatEndRef.current) {
-  //     chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  //   if(isKeyboardOpen){
-  //     chatAreaRef.current.scrollIntoView({ behavior: "smooth" });
-  //   }
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    // if(isKeyboardOpen){
+    //   chatAreaRef.current.scrollIntoView({ behavior: "smooth" });
+    // }
  
-  // }, [messagesList]);
+  }, [messagesList]);
 
   const handleFocus = () => {
     setIsTextAreaFocused(true);
@@ -220,7 +222,7 @@ const AiChat = ({ searchParams }) => {
       {/* Chat Area */}
       <div
         ref={chatAreaRef}
-        className=" flex-grow pt-[129px] font-sans overflow-y-auto p-3"
+        className=" flex-grow py-[129px] font-sans overflow-y-auto p-3"
        
       >
         {messagesList.map((msg, index) => (
@@ -235,7 +237,7 @@ const AiChat = ({ searchParams }) => {
               <div className="flex flex-col items-start">
                 <div className="flex gap-4 justify-center items-center font-light">
                   <div>
-                    <Image src={dot} alt="dot" />
+                    <Image src={dot} alt="dot"  />
                   </div>
                   <div className="text-xs text-black opacity-60">
                     Wardah AI Assistant -
@@ -286,7 +288,7 @@ const AiChat = ({ searchParams }) => {
 
             {msg.type === 0 && (
               <div className="flex flex-col items-end overflow-x-hidden">
-                <div className="rounded-2xl break-words bg-white px-2 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
+                <div ref={chatEndRef} className="rounded-2xl break-words bg-white px-2 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
                   {msg.message}
                 </div>
                 {msg.images && msg.images.length > 0 && (
@@ -330,14 +332,19 @@ const AiChat = ({ searchParams }) => {
             <Image src={cam} alt="cam" />
           </div>
         ) : (
+          
           <div
-            onClick={() => {makeApiCall()
-            textareaRef.current.blur()
-            }}
+           onClick={() => {
+            if (textareaRef.current) {
+              textareaRef.current.blur();
+            }
+            makeApiCall();
+          }}
             className="w-10 h-10 flex justify-center items-center cursor-pointer"
           >
             <Image src={send} alt="send" />
           </div>
+          
         )}
       </div>
     </div>
