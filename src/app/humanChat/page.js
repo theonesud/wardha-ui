@@ -14,6 +14,8 @@ const TalkToHuman = () => {
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const headerRef = useRef(null);
+  const chatAreaRef = useRef(null);
 
   const textareaRef = useRef(null);
 
@@ -70,7 +72,7 @@ const TalkToHuman = () => {
         />
       )}
       {/* Header */}
-      <div className="sticky top-0 bg-[#F4FBFB] z-10">
+      <div ref={headerRef} className="header  fixed w-full top-0 bg-[#F4FBFB] z-10">
         <div className="flex justify-between px-3 pt-3">
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
@@ -83,7 +85,11 @@ const TalkToHuman = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-grow font-sans overflow-y-auto p-3">
+      <div
+          ref={chatAreaRef}
+          className=" flex-grow  font-sans overflow-y-auto p-3"
+          style={{ paddingTop: '5rem', paddingBottom: '5rem' }}
+        >
         {messagesList.map((msg, index) => (
           <div
             key={index}
