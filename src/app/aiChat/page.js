@@ -206,7 +206,8 @@ const AiChat = ({ searchParams }) => {
 
   return (
     <div>
-      <div className={`flex flex-col  bg-[#F4FBFB] ${isKeyboardOpen ? 'h-[430px] ' : 'h-screen'}`}>
+      {/* <div className={`flex flex-col  bg-[#F4FBFB] ${isKeyboardOpen ? 'h-[430px] ' : 'h-screen'}`}> */}
+      <div className={`flex flex-col  bg-[#F4FBFB] ${'h-screen'}`}>
         {isCameraOpen && (
           <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
         )}
