@@ -9,6 +9,7 @@ import dot from "../assets/svg/aiDot.svg";
 import { useRouter } from "next/navigation";
 import CameraCapture from "../components/cameraCapture";
 import whiteball from "../assets/svg/whiteball.svg";
+import logo from "../assets/images/logo.png";
 
 const TalkToHuman = () => {
   const router = useRouter();
@@ -78,6 +79,9 @@ const TalkToHuman = () => {
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
           </div>
+          <div className="flex justify-center">
+                <Image src={logo} alt="logo" className="h-10"/>
+            </div>
           <div onClick={handleRefresh}>
             <Image src={refresh} alt="refresh" />
           </div>
@@ -162,7 +166,7 @@ const TalkToHuman = () => {
           </div>
         </div>
       </div> */}
-      <div className="w-full flex items-center justify-center gap-4 py-1 rounded-full my-1 px-5 bg-white">
+      <div className="w-full flex items-center justify-center gap-4  my-1 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 import useDetectKeyboardOpen from "use-detect-keyboard-open";
+import logo from "../assets/images/logo.png";
 
 const AiChat = ({ searchParams }) => {
   const router = useRouter();
@@ -218,6 +219,9 @@ const AiChat = ({ searchParams }) => {
             <div onClick={() => router.push("/dashboard")}>
               <Image src={backArrow} alt="back" />
             </div>
+            <div className="flex justify-center">
+                <Image src={logo} alt="logo" className="h-10"/>
+            </div>
             <div onClick={handleRefresh}>
               <Image src={refresh} alt="refresh" />
             </div>
@@ -305,7 +309,7 @@ const AiChat = ({ searchParams }) => {
                       ))}
                     </div>
                   )}
-                  <div className="absolute top-10">
+                  <div className="absolute top-9">
                       <Image src={whiteball} alt="dot" />
                     </div>
                 </div>
@@ -320,7 +324,7 @@ const AiChat = ({ searchParams }) => {
         {/* Input Area */}
         <div
           ref={inputAreaRef}
-          className={`input-area  ${!isKeyboardOpen &&"fixed bottom-0"} flex w-full items-center border border-[#E6E6E6] justify-center gap-4 py-1 rounded-full px-5 my-1 bg-white`}
+          className={`input-area  ${!isKeyboardOpen &&"fixed bottom-0"} flex w-full items-center border border-[#E6E6E6] justify-center gap-4  px-5 my-1 bg-white`}
         >
           <textarea
             ref={textareaRef}
