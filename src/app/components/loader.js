@@ -4,9 +4,8 @@ import { ThreeDots } from 'react-loader-spinner';
 const Loader = () => {
     const [step, setStep] = useState(0);
     const steps = [
-        "🔍 Analyzing",
-        "💭 Thinking",
-        "⏳ Almost Done"
+        "Thinking",
+        "Almost Done"
     ];
 
     useEffect(() => {
