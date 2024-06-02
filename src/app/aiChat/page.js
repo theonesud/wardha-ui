@@ -7,6 +7,7 @@ import refresh from "../assets/svg/refresh.svg";
 import cam from "../assets/svg/cam.svg";
 import send from "../assets/svg/send.svg";
 import dot from "../assets/svg/aiDot.svg";
+import whiteball from "../assets/svg/whiteball.svg";
 import SuggestionContainer from "../components/suggestionContainer";
 import Loader from "../components/loader";
 import { useRouter } from "next/navigation";
@@ -213,7 +214,7 @@ const AiChat = ({ searchParams }) => {
         )}
         {/* Header */}
         <div ref={headerRef} className="header  fixed w-full top-0 bg-[#F4FBFB] z-10">
-          <div className="flex justify-between px-3 pt-3">
+          <div className="flex justify-between px-3 pt-1">
             <div onClick={() => router.push("/dashboard")}>
               <Image src={backArrow} alt="back" />
             </div>
@@ -221,7 +222,7 @@ const AiChat = ({ searchParams }) => {
               <Image src={refresh} alt="refresh" />
             </div>
           </div>
-          <hr className="border-[0.3px] border-customCyan mt-3" />
+          <hr className="border-[0.3px] border-customCyan mt-1" />
         </div>
 
         {/* Chat Area */}
@@ -271,7 +272,7 @@ const AiChat = ({ searchParams }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
+                    <div style={{borderRadius:'0 16px 16px 16px'}} className=" bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
                       {msg.message}
                     </div>
                   )}
@@ -291,8 +292,8 @@ const AiChat = ({ searchParams }) => {
               )}
 
               {msg.type === 0 && (
-                <div className="flex flex-col items-end overflow-x-hidden">
-                  <div ref={chatEndRef} className="rounded-2xl break-words bg-white px-2 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black h-auto">
+                <div className="flex relative flex-col items-end overflow-x-hidden">
+                  <div ref={chatEndRef} style={{borderRadius:'16px 16px 0 16px'}} className=" drop-shadow-sm bg-white px-5 py-2 mx-5 my-2 max-w-[75%] text-base font-light text-black">
                     {msg.message}
                   </div>
                   {msg.images && msg.images.length > 0 && (
@@ -304,7 +305,11 @@ const AiChat = ({ searchParams }) => {
                       ))}
                     </div>
                   )}
+                  <div className="absolute top-10">
+                      <Image src={whiteball} alt="dot" />
+                    </div>
                 </div>
+                
               )}
             </div>
           ))}
@@ -315,7 +320,7 @@ const AiChat = ({ searchParams }) => {
         {/* Input Area */}
         <div
           ref={inputAreaRef}
-          className={`input-area w-screen ${!isKeyboardOpen &&"fixed bottom-0"} flex items-center border border-[#E6E6E6] justify-center gap-4 py-4 px-5 bg-white`}
+          className={`input-area  ${!isKeyboardOpen &&"fixed bottom-0"} flex w-full items-center border border-[#E6E6E6] justify-center gap-4 py-1 rounded-full px-5 my-1 bg-white`}
         >
           <textarea
             ref={textareaRef}

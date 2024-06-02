@@ -8,6 +8,7 @@ import send from "../assets/svg/send.svg";
 import dot from "../assets/svg/aiDot.svg";
 import { useRouter } from "next/navigation";
 import CameraCapture from "../components/cameraCapture";
+import whiteball from "../assets/svg/whiteball.svg";
 
 const TalkToHuman = () => {
   const router = useRouter();
@@ -73,7 +74,7 @@ const TalkToHuman = () => {
       )}
       {/* Header */}
       <div ref={headerRef} className="header  fixed w-full top-0 bg-[#F4FBFB] z-10">
-        <div className="flex justify-between px-3 pt-3">
+        <div className="flex justify-between px-3 pt-1">
           <div onClick={() => router.push("/dashboard")}>
             <Image src={backArrow} alt="back" />
           </div>
@@ -81,7 +82,7 @@ const TalkToHuman = () => {
             <Image src={refresh} alt="refresh" />
           </div>
         </div>
-        <hr className="border-[0.3px] border-customCyan mt-3" />
+        <hr className="border-[0.3px] border-customCyan mt-1" />
       </div>
 
       {/* Chat Area */}
@@ -98,7 +99,7 @@ const TalkToHuman = () => {
             } mb-2`}
           >
             {msg.type === 1 && (
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-start ">
                 <div className="flex gap-4 font-light ">
                   <div>
                     <Image src={dot} alt="dot" />
@@ -107,8 +108,8 @@ const TalkToHuman = () => {
                     Wardah AI Assistant -
                   </div>
                 </div>
-                <div
-                  className={`rounded-2xl mx-4 my-2 px-4 py-2 max-w-[80%] text-base font-light text-black ${
+                <div style={{borderRadius:'0 16px 16px 16px'}}
+                  className={`mx-4 my-2 px-4 py-2 max-w-[80%] text-base font-light text-black ${
                     msg.type === 0 ? "bg-white" : "bg-aiChatBg"
                   }`}
                 >
@@ -118,8 +119,8 @@ const TalkToHuman = () => {
             )}
 
             {msg.type === 0 && (
-              <div className="flex flex-col items-end">
-                <div className="rounded-2xl drop-shadow-md bg-white mx-2 px-4 py-2 text-base font-light text-black">
+              <div className="flex relative  flex-col items-end">
+                <div style={{borderRadius:'16px 16px 0 16px'}} className=" drop-shadow-md bg-white mx-4 my-2 px-4 py-2 text-base font-light text-black">
                   {msg.message}
                 </div>
                 {msg.images && msg.images.length > 0 && (
@@ -131,6 +132,9 @@ const TalkToHuman = () => {
                     ))}
                   </div>
                 )}
+                <div className="absolute top-10">
+                      <Image src={whiteball} alt="dot" />
+                    </div>
               </div>
             )}
           </div>
@@ -158,7 +162,7 @@ const TalkToHuman = () => {
           </div>
         </div>
       </div> */}
-      <div className="w-screen flex items-center justify-center gap-4 py-4 px-5 bg-white">
+      <div className="w-full flex items-center justify-center gap-4 py-1 rounded-full my-1 px-5 bg-white">
         <textarea
           ref={textareaRef}
           value={message}

@@ -57,7 +57,7 @@ const Dashboard = () => {
       <div className="w-full ">
         <Image src={logo} alt="logo" />
       </div>
-      <div className="text-headerText font-medium text-3xl leading-10 mt-14 mb-5">
+      <div className="text-headerText font-medium text-3xl leading-10 mt-4 mb-2">
         Hello there.
         <br /> How can we help?
       </div>
