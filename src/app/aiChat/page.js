@@ -15,6 +15,7 @@ import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import logo from "../assets/images/logo.png";
+import { AiFillDownCircle } from "react-icons/ai";
 
 const AiChat = ({ searchParams }) => {
   const router = useRouter();
@@ -31,7 +32,8 @@ const AiChat = ({ searchParams }) => {
   const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
   const isKeyboardOpen = useDetectKeyboardOpen();
   const [initialFocus, setInitialFocus] = useState(true);
-  
+  const [showScrollDownArrow, setShowScrollDownArrow] = useState(false);
+
   useEffect(() => {
     const initialMessage = {
       type: 1,
@@ -41,7 +43,7 @@ const AiChat = ({ searchParams }) => {
     setMessagesList([initialMessage]);
   }, []);
 
-  
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -61,13 +63,36 @@ const AiChat = ({ searchParams }) => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
- 
+
 
   }, [messagesList]);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chatAreaRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = chatAreaRef.current;
+        console.log(scrollTop, scrollHeight, clientHeight, "scrollHeight");
+        setShowScrollDownArrow(scrollHeight > clientHeight && scrollTop < scrollHeight - clientHeight);
+      }
+    };
+  
+    if (chatAreaRef.current) {
+      chatAreaRef.current.addEventListener('scroll', handleScroll);
+    }
+  
+    // Initial check to set arrow visibility
+    handleScroll();
+  
+    return () => {
+      if (chatAreaRef.current) {
+        chatAreaRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+  
 
   const handleFocus = () => {
     setIsTextAreaFocused(true);
- 
+
   };
 
   const handleBlur = () => {
@@ -204,8 +229,13 @@ const AiChat = ({ searchParams }) => {
 
   };
 
-  
 
+  const handleScrollDown = () => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  
   return (
     <div>
       {/* <div className={`flex flex-col  bg-[#F4FBFB] ${isKeyboardOpen ? 'h-[430px] ' : 'h-screen'}`}> */}
@@ -220,7 +250,7 @@ const AiChat = ({ searchParams }) => {
               <Image src={backArrow} alt="back" />
             </div>
             <div className="flex justify-center">
-                <Image src={logo} alt="logo" className="h-10"/>
+              <Image src={logo} alt="logo" className="h-10" />
             </div>
             <div onClick={handleRefresh}>
               <Image src={refresh} alt="refresh" />
@@ -276,7 +306,7 @@ const AiChat = ({ searchParams }) => {
                       </div>
                     </div>
                   ) : (
-                    <div style={{borderRadius:'0 16px 16px 16px'}} className=" bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
+                    <div style={{ borderRadius: '0 16px 16px 16px' }} className=" bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black">
                       {msg.message}
                     </div>
                   )}
@@ -297,7 +327,7 @@ const AiChat = ({ searchParams }) => {
 
               {msg.type === 0 && (
                 <div className="flex relative flex-col items-end overflow-x-hidden">
-                  <div ref={chatEndRef} style={{borderRadius:'16px 16px 0 16px'}} className=" drop-shadow-sm bg-white px-5 py-2 mx-5 my-2 max-w-[75%] text-base font-light text-black">
+                  <div ref={chatEndRef} style={{ borderRadius: '16px 16px 0 16px' }} className=" drop-shadow-sm bg-white px-5 py-2 mx-5 my-2 max-w-[75%] text-base font-light text-black">
                     {msg.message}
                   </div>
                   {msg.images && msg.images.length > 0 && (
@@ -310,21 +340,27 @@ const AiChat = ({ searchParams }) => {
                     </div>
                   )}
                   <div className="absolute top-9">
-                      <Image src={whiteball} alt="dot" />
-                    </div>
+                    <Image src={whiteball} alt="dot" />
+                  </div>
                 </div>
-                
+
               )}
             </div>
           ))}
           {loading && <Loader />}
 
         </div>
+        <div
+          onClick={handleScrollDown}
+          className={`fixed bottom-20 right-4 cursor-pointer ${showScrollDownArrow ? 'block' : 'hidden'}`}
+        >
+          <AiFillDownCircle size={40} color="#00A3A3" />
+        </div>
 
         {/* Input Area */}
         <div
           ref={inputAreaRef}
-          className={`input-area  ${!isKeyboardOpen &&"fixed bottom-0"} flex w-full items-center border border-[#E6E6E6] justify-center gap-4  px-5 my-1 bg-white`}
+          className={`input-area  ${!isKeyboardOpen && "fixed bottom-0"} flex w-full items-center border border-[#E6E6E6] justify-center gap-4  px-5  bg-white`}
         >
           <textarea
             ref={textareaRef}
@@ -360,9 +396,9 @@ const AiChat = ({ searchParams }) => {
 
           )}
         </div>
-        
+
       </div>
-      
+
     </div>
   );
 };
