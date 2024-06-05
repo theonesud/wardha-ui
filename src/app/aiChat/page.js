@@ -266,7 +266,7 @@ const AiChat = ({ searchParams }) => {
         <div
           ref={chatAreaRef}
           className=" flex-grow  font-sans overflow-y-auto p-3"
-          style={{ paddingTop: '5rem', paddingBottom: '5rem' }}
+          style={{ paddingTop: '5rem', paddingBottom: '2rem' }}
 
         >
           {messagesList.map((msg, index) => (
