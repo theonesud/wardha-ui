@@ -369,7 +369,7 @@ const AiChat = ({ searchParams }) => {
           <div
             ref={inputAreaRef}
             className={`input-area  ${!isKeyboardOpen && "fixed bottom-0"} flex w-[95%] ml-3 py-2 h-auto items-end border border-[#E6E6E6] justify-center gap-4 px-6  bg-white`}
-            style={{ minHeight: '40px', border: '2px solid #E6E6E6', borderRadius: '16px',paddingLeft:'8px',paddingTop:'4px',paddingBottom:'4px',paddingRight:'5px',marginBottom:'4px' }}
+            style={{ minHeight: '40px', border: '2px solid #E8E8E8', borderRadius: '16px',paddingLeft:'8px',paddingTop:'4px',paddingBottom:'4px',paddingRight:'5px',marginBottom:'4px' }}
           >
 
             <textarea
