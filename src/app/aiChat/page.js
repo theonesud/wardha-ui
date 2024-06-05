@@ -101,8 +101,12 @@ const AiChat = ({ searchParams }) => {
   const makeApiCall = async (messageText, showResponse = false) => {
     console.log(showResponse, "showResponse");
     if (textareaRef.current) {
-      textareaRef.current.blur();
+      textareaRef.current.focus();
     }
+  
+    // if (textareaRef.current) {
+    //   textareaRef.current.blur();
+    // }
     if (showResponse) {
       const res = await fetch("https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask", {
         method: "POST",
@@ -372,7 +376,7 @@ const AiChat = ({ searchParams }) => {
               ref={textareaRef}
               value={message}
               onFocus={handleFocus}
-              onBlur={handleBlur}
+              // onBlur={handleBlur}
               onChange={(e) => setMessage(e.target.value)}
               type="text"
               placeholder="Type a message"
@@ -391,9 +395,9 @@ const AiChat = ({ searchParams }) => {
 
               <div
                 onClick={() => {
-                  if (textareaRef.current) {
-                    textareaRef.current.blur();
-                  }
+                  // if (textareaRef.current) {
+                  //   textareaRef.current.blur();
+                  // }
                   makeApiCall();
                 }}
                 className="w-10 h-10 flex justify-center items-center cursor-pointer"
