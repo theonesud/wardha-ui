@@ -73,21 +73,21 @@ const AiChat = ({ searchParams }) => {
         setShowScrollDownArrow(scrollHeight > clientHeight && scrollTop < scrollHeight - clientHeight);
       }
     };
-  
+
     if (chatAreaRef.current) {
       chatAreaRef.current.addEventListener('scroll', handleScroll);
     }
-  
+
     // Initial check to set arrow visibility
     handleScroll();
-  
+
     return () => {
       if (chatAreaRef.current) {
         chatAreaRef.current.removeEventListener('scroll', handleScroll);
       }
     };
   }, []);
-  
+
 
   const handleFocus = () => {
     setIsTextAreaFocused(true);
@@ -234,17 +234,17 @@ const AiChat = ({ searchParams }) => {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
+
   return (
     <div>
       {/* <div className={`flex flex-col  bg-[#F4FBFB] ${isKeyboardOpen ? 'h-[430px] ' : 'h-screen'}`}> */}
-      <div className={`flex flex-col  bg-[#F4FBFB] ${'h-screen'}`}>
+      <div className={`flex flex-col  bg-[#F4FBFB] ${'h-screen'}`} >
         {isCameraOpen && (
           <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
         )}
         {/* Header */}
-        <div ref={headerRef} className="header fixed w-full top-0 bg-[#F4FBFB] z-10">
-          <div className="flex justify-between px-3 pt-[2px]">
+        <div ref={headerRef} className="header fixed w-full top-0 bg-[#F4FBFB] z-10" >
+          <div className="flex justify-between px-3 pt-[2px]" >
             <div onClick={() => router.push("/dashboard")}>
               <Image src={backArrow} alt="back" />
             </div>
@@ -263,6 +263,7 @@ const AiChat = ({ searchParams }) => {
           ref={chatAreaRef}
           className=" flex-grow  font-sans overflow-y-auto p-3"
           style={{ paddingTop: '5rem', paddingBottom: '5rem' }}
+
         >
           {messagesList.map((msg, index) => (
             <div
@@ -357,51 +358,53 @@ const AiChat = ({ searchParams }) => {
         </div>
 
         {/* Input Area */}
-        <div>
-        <div
-          ref={inputAreaRef}
-          className={`input-area rounded-full ${!isKeyboardOpen && "fixed bottom-0"} flex w-full py-2 h-auto items-center border border-[#E6E6E6] justify-center gap-4 px-6  bg-white`}
-        >
-         
-          <textarea
-            ref={textareaRef}
-            value={message}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={(e) => setMessage(e.target.value)}
-            type="text"
-            placeholder="Type a message"
-            className="w-full h-auto flex-1 outline-none focus:outline-none resize-none bg-none no-scrollbar"
-            rows={1}
-          />
-          {!message ? (
-            <div
-              onClick={() => setIsCameraOpen(true)}
-              className="w-10 h-10 flex justify-center items-center cursor-pointer"
-            >
-              <Image src={cam} alt="cam" />
-            </div>
-          ) : (
+        <div style={{background:'#F4FBFB' , minHeight:'57px' }}>
+          <div
+            ref={inputAreaRef}
+            className={`input-area  ${!isKeyboardOpen && "fixed bottom-0"} flex w-[95%] ml-3 py-2 h-auto items-center border border-[#E6E6E6] justify-center gap-4 px-6  bg-white`}
+            style={{ minHeight: '40px', border: '2px solid #E6E6E6', borderRadius: '30px', padding: '4px',marginBottom:'4px' }}
+          >
 
-            <div
-              onClick={() => {
-                if (textareaRef.current) {
-                  textareaRef.current.blur();
-                }
-                makeApiCall();
-              }}
-              className="w-10 h-10 flex justify-center items-center cursor-pointer"
-            >
-              <Image src={rocket} alt="send" />
-            </div>
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onChange={(e) => setMessage(e.target.value)}
+              type="text"
+              placeholder="Type a message"
+              className="w-full h-auto flex-1  outline-none focus:outline-none resize-none bg-none no-scrollbar"
+              style={{ height: '40px', padding: '8px 0', margin: '0 8px', }}
+              rows={1}
+            />
+            {!message ? (
+              <div
+                onClick={() => setIsCameraOpen(true)}
+                className="w-10 h-10 flex justify-center items-center cursor-pointer"
+              >
+                <Image src={cam} alt="cam" />
+              </div>
+            ) : (
 
-          )}
-         
+              <div
+                onClick={() => {
+                  if (textareaRef.current) {
+                    textareaRef.current.blur();
+                  }
+                  makeApiCall();
+                }}
+                className="w-10 h-10 flex justify-center items-center cursor-pointer"
+              >
+                <Image src={rocket} alt="send" />
+              </div>
+
+            )}
+
+          </div>
+
         </div>
 
       </div>
-
-</div>
     </div>
   );
 };
