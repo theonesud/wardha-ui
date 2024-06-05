@@ -327,8 +327,13 @@ const AiChat = ({ searchParams }) => {
 
               {msg.type === 0 && (
                 <div className="flex relative flex-col items-end overflow-x-hidden">
-                  <div ref={chatEndRef} style={{ borderRadius: '16px 16px 0 16px' }} className=" drop-shadow-sm bg-white px-5 py-2 mx-5 my-2 max-w-[75%] text-base font-light text-black">
+                  <div className="flex justify-end items-end">
+                  <div ref={chatEndRef} style={{ borderRadius: '16px 16px 0 16px' }} className=" drop-shadow-sm bg-white px-5 py-2 mx-2  max-w-[75%] text-base font-light text-black">
                     {msg.message}
+                  </div>
+                  <div className="">
+                    <Image src={whiteball} alt="dot" />
+                  </div>
                   </div>
                   {msg.images && msg.images.length > 0 && (
                     <div className="mt-2">
@@ -339,9 +344,7 @@ const AiChat = ({ searchParams }) => {
                       ))}
                     </div>
                   )}
-                  <div className="absolute top-9">
-                    <Image src={whiteball} alt="dot" />
-                  </div>
+                  
                 </div>
 
               )}
