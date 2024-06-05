@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { isMobile, isIOS } from "react-device-detect";
 import backArrow from "../assets/svg/barrow.svg";
 import Image from "next/image";
 import refresh from "../assets/svg/refresh.svg";
 import cam from "../assets/svg/cam.svg";
-import send from "../assets/svg/send.svg";
 import dot from "../assets/svg/aiDot.svg";
 import whiteball from "../assets/svg/whiteball.svg";
 import SuggestionContainer from "../components/suggestionContainer";
@@ -15,7 +13,9 @@ import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import logo from "../assets/images/logo.png";
-import { AiFillDownCircle } from "react-icons/ai";
+import Button from '../assets/svg/button.svg';
+import rocket from '../assets/svg/rocket.svg';
+import headerLogo from '../assets/svg/headerlogo.svg';
 
 const AiChat = ({ searchParams }) => {
   const router = useRouter();
@@ -244,13 +244,13 @@ const AiChat = ({ searchParams }) => {
           <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
         )}
         {/* Header */}
-        <div ref={headerRef} className="header  fixed w-full top-0 bg-[#F4FBFB] z-10">
-          <div className="flex justify-between px-3 pt-1">
+        <div ref={headerRef} className="header fixed w-full top-0 bg-[#F4FBFB] z-10">
+          <div className="flex justify-between px-3 pt-[2px]">
             <div onClick={() => router.push("/dashboard")}>
               <Image src={backArrow} alt="back" />
             </div>
             <div className="flex justify-center">
-              <Image src={logo} alt="logo" className="h-10" />
+              <Image src={headerLogo} alt="logo" />
             </div>
             <div onClick={handleRefresh}>
               <Image src={refresh} alt="refresh" />
@@ -352,16 +352,18 @@ const AiChat = ({ searchParams }) => {
         </div>
         <div
           onClick={handleScrollDown}
-          className={`fixed bottom-20 right-4 cursor-pointer ${showScrollDownArrow ? 'block' : 'hidden'}`}
+          className={`fixed bottom-16 left-[48%] cursor-pointer ${showScrollDownArrow ? 'block' : 'hidden'}`}
         >
-          <AiFillDownCircle size={40} color="#00A3A3" />
+          <Image src={Button} alt="button" />
         </div>
 
         {/* Input Area */}
+        <div>
         <div
           ref={inputAreaRef}
-          className={`input-area  ${!isKeyboardOpen && "fixed bottom-0"} flex w-full items-center border border-[#E6E6E6] justify-center gap-4  px-5  bg-white`}
+          className={`input-area rounded-full ${!isKeyboardOpen && "fixed bottom-0"} flex w-full py-2 h-auto items-center border border-[#E6E6E6] justify-center gap-4 px-6  bg-white`}
         >
+         
           <textarea
             ref={textareaRef}
             value={message}
@@ -391,14 +393,16 @@ const AiChat = ({ searchParams }) => {
               }}
               className="w-10 h-10 flex justify-center items-center cursor-pointer"
             >
-              <Image src={send} alt="send" />
+              <Image src={rocket} alt="send" />
             </div>
 
           )}
+         
         </div>
 
       </div>
 
+</div>
     </div>
   );
 };
