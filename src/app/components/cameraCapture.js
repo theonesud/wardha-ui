@@ -31,9 +31,9 @@ const CameraCapture = ({ onCapture, onClose }) => {
           }
 
           // Automatically capture the image after 3 seconds
-          setTimeout(() => {
-            handleCaptureClick();
-          }, 5000);
+          // setTimeout(() => {
+          //   handleCaptureClick();
+          // }, 5000);
 
         } catch (err) {
           console.error("Error accessing camera: ", err);
