@@ -247,12 +247,12 @@ const AiChat = ({ searchParams }) => {
           <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />
         )}
         {/* Header */}
-        <div ref={headerRef} className="header fixed w-full top-0 bg-[#F4FBFB] z-10" >
+        <div ref={headerRef} className="header  fixed w-full top-0 bg-[#F4FBFB] z-10" >
           <div className="flex justify-between px-3 pt-[2px]" >
             <div onClick={() => router.push("/dashboard")}>
               <Image src={backArrow} alt="back" />
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center items-center">
               <Image src={headerLogo} alt="logo" />
             </div>
             <div onClick={handleRefresh}>

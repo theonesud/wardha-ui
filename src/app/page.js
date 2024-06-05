@@ -3,7 +3,7 @@ import HomePage from "./home";
 
 export default function Home() {
   return (
-    <main className="bg-[#D0EEEE] h-screen flex justify-center items-center p-2">
+    <main className="bg-[#D0EEEE] h-screen flex   p-2">
       <div>
         <HomePage/>
       </div>
