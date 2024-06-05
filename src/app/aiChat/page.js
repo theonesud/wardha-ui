@@ -12,8 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CameraCapture from "../components/cameraCapture";
 import useDetectKeyboardOpen from "use-detect-keyboard-open";
-import logo from "../assets/images/logo.png";
-import Button from '../assets/svg/button.svg';
+import Button from '../assets/svg/Button.svg';
 import rocket from '../assets/svg/rocket.svg';
 import headerLogo from '../assets/svg/headerlogo.svg';
 
