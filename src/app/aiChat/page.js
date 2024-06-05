@@ -365,7 +365,7 @@ const AiChat = ({ searchParams }) => {
           <div
             ref={inputAreaRef}
             className={`input-area  ${!isKeyboardOpen && "fixed bottom-0"} flex w-[95%] ml-3 py-2 h-auto items-center border border-[#E6E6E6] justify-center gap-4 px-6  bg-white`}
-            style={{ minHeight: '40px', border: '2px solid #E6E6E6', borderRadius: '30px', padding: '4px',marginBottom:'4px' }}
+            style={{ minHeight: '40px', border: '2px solid #E6E6E6', borderRadius: '16px',paddingLeft:'8px',paddingTop:'4px',paddingBottom:'4px',paddingRight:'5px',marginBottom:'4px' }}
           >
 
             <textarea
@@ -377,7 +377,7 @@ const AiChat = ({ searchParams }) => {
               type="text"
               placeholder="Type a message"
               className="w-full h-auto flex-1  outline-none focus:outline-none resize-none bg-none no-scrollbar"
-              style={{ height: '40px', padding: '8px 0', margin: '0 8px', }}
+              style={{ height: '40px', padding: '8px 0', margin: '0 8px',fontSize:'16px' }}
               rows={1}
             />
             {!message ? (
