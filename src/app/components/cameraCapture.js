@@ -5,6 +5,9 @@ import Capture from "../assets/svg/capture.svg";
 import Toggle from "../assets/svg/toggle.svg";
 import Close from "../assets/svg/close.svg";
 import UploadFromDevice from "../assets/svg/uploadFromDevice.svg";
+import headerLogo from "../assets/svg/headerlogo.svg";
+import backArrow from "../assets/svg/barrow.svg";
+import Image from "next/image";
 
 const CameraCapture = ({ onCapture, onClose }) => {
   const videoRef = useRef(null);
@@ -34,7 +37,6 @@ const CameraCapture = ({ onCapture, onClose }) => {
           // setTimeout(() => {
           //   handleCaptureClick();
           // }, 5000);
-
         } catch (err) {
           console.error("Error accessing camera: ", err);
         }
@@ -129,6 +131,27 @@ const CameraCapture = ({ onCapture, onClose }) => {
         </>
       ) : (
         <>
+          {/* <div style={{position: "absolute", top: "0", left: "0", width: '100vw' }}>Click a picture of the barcode</div> */}
+          <div className="header  fixed w-full top-0 bg-[#F4FBFB] z-10">
+            <div className="flex justify-between px-3 pt-[2px]">
+              <div onClick={() => onClose()} className=" cursor-pointer">
+                <Image src={backArrow} alt="back" />
+              </div>
+              <div className="flex justify-center items-center flex-1 font-normal text-xl text-black">
+                {/* <Image src={headerLogo} alt="logo" /> */}
+                Click a picture of the barcode
+              </div>
+              {/* <button
+                className="cursor-pointer w-12 h-12 flex items-center justify-center rounded-full bg-black opacity-60"
+                onClick={() => {
+                  onClose();
+                }}
+              >
+                <img src={Close.src} />
+              </button> */}
+            </div>
+            <hr className="border-[0.3px] border-customCyan mt-1" />
+          </div>
           <video
             ref={videoRef}
             autoPlay
@@ -159,7 +182,10 @@ const CameraCapture = ({ onCapture, onClose }) => {
               </div>
             </div>
             <div className="flex flex-col items-center gap-3">
-              <div className=" cursor-pointer w-20 h-20 flex items-center justify-center rounded-full bg-black opacity-60" onClick={() => fileInputRef.current.click()}>
+              <div
+                className=" cursor-pointer w-20 h-20 flex items-center justify-center rounded-full bg-black opacity-60"
+                onClick={() => fileInputRef.current.click()}
+              >
                 <img src={UploadFromDevice.src} />
               </div>
               <input
@@ -173,14 +199,14 @@ const CameraCapture = ({ onCapture, onClose }) => {
           </div>
         </>
       )}
-      <button
+      {/* <button
         className="cursor-pointer w-12 h-12 flex items-center justify-center rounded-full bg-black opacity-60 absolute top-5 right-5"
         onClick={() => {
           onClose();
         }}
       >
         <img src={Close.src} />
-      </button>
+      </button> */}
     </div>
   );
 };
