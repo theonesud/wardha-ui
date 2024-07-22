@@ -3,14 +3,11 @@ import { ThreeDots } from 'react-loader-spinner';
 
 const Loader = () => {
     const [step, setStep] = useState(0);
-    const steps = [
-        "Thinking",
-        "Almost Done"
-    ];
+    const steps = ['Thinking', 'Almost Done'];
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setStep(prevStep => {
+            setStep((prevStep) => {
                 if (prevStep < steps.length - 1) {
                     return prevStep + 1;
                 } else {
@@ -26,12 +23,12 @@ const Loader = () => {
     const containerStyle = {
         display: 'flex',
         alignItems: 'center',
-        gap: '10px'
+        gap: '10px',
     };
 
     return (
         <div className="rounded-2xl bg-aiChatBg px-4 py-2 mx-5 my-2 inline-flex items-center gap-2">
-            <p>{steps[step]}</p>
+            {/* <p>{steps[step]}</p> */}
             <ThreeDots
                 visible={true}
                 height="40"
@@ -44,6 +41,6 @@ const Loader = () => {
             />
         </div>
     );
-}
+};
 
 export default Loader;
