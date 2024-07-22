@@ -61,17 +61,12 @@ const AiChat = ({ searchParams }) => {
             chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messagesList]);
+
     useEffect(() => {
         const handleScroll = () => {
             if (chatAreaRef.current) {
                 const { scrollTop, scrollHeight, clientHeight } =
                     chatAreaRef.current;
-                console.log(
-                    scrollTop,
-                    scrollHeight,
-                    clientHeight,
-                    'scrollHeight'
-                );
                 setShowScrollDownArrow(
                     scrollHeight > clientHeight &&
                         scrollTop < scrollHeight - clientHeight
@@ -102,14 +97,10 @@ const AiChat = ({ searchParams }) => {
     };
 
     const makeApiCall = async (messageText, showResponse = false) => {
-        console.log(showResponse, 'showResponse');
         if (textareaRef.current) {
             textareaRef.current.focus();
         }
 
-        // if (textareaRef.current) {
-        //   textareaRef.current.blur();
-        // }
         if (showResponse) {
             const res = await fetch('http://localhost:8000/assistant/ask', {
                 method: 'POST',
@@ -119,6 +110,10 @@ const AiChat = ({ searchParams }) => {
                 body: JSON.stringify({
                     thread_id: threadId,
                     question: JSON.stringify(messageText),
+                    chat_history: messagesList.map((msg) => ({
+                        role: msg.type === 0 ? 'user' : 'assistant',
+                        content: msg.message,
+                    })),
                 }),
             });
             const data = await res.json();
@@ -140,6 +135,10 @@ const AiChat = ({ searchParams }) => {
                 body: JSON.stringify({
                     thread_id: threadId,
                     question: userMessage,
+                    chat_history: messagesList.map((msg) => ({
+                        role: msg.type === 0 ? 'user' : 'assistant',
+                        content: msg.message,
+                    })),
                 }),
             });
             const data = await res.json();
@@ -147,8 +146,6 @@ const AiChat = ({ searchParams }) => {
             setThreadId(data.thread_id || threadId);
             addBotMessage(data.response, data.suggestions, data?.products);
         }
-
-        // Close the keyboard
     };
 
     const handleRefresh = () => {
@@ -254,18 +251,16 @@ const AiChat = ({ searchParams }) => {
 
     return (
         <div>
-            {/* <div className={`flex flex-col  bg-[#F4FBFB] ${isKeyboardOpen ? 'h-[430px] ' : 'h-screen'}`}> */}
-            <div className={`flex flex-col  bg-[#F4FBFB] ${'h-screen'}`}>
+            <div className={`flex flex-col bg-[#F4FBFB] ${'h-screen'}`}>
                 {isCameraOpen && (
                     <CameraCapture
                         onCapture={handleCapture}
                         onClose={() => setIsCameraOpen(false)}
                     />
                 )}
-                {/* Header */}
                 <div
                     ref={headerRef}
-                    className="header  fixed w-full top-0 bg-[#F4FBFB] z-10"
+                    className="header fixed w-full top-0 bg-[#F4FBFB] z-10"
                 >
                     <div className="flex justify-between px-3 pt-[2px]">
                         <div onClick={() => router.push('/dashboard')}>
@@ -281,10 +276,9 @@ const AiChat = ({ searchParams }) => {
                     <hr className="border-[0.3px] border-customCyan mt-1" />
                 </div>
 
-                {/* Chat Area */}
                 <div
                     ref={chatAreaRef}
-                    className=" flex-grow  font-sans overflow-y-auto p-3"
+                    className="flex-grow font-sans overflow-y-auto p-3"
                     style={{ paddingTop: '5rem', paddingBottom: '2rem' }}
                 >
                     {messagesList.map((msg, index) => (
@@ -339,7 +333,7 @@ const AiChat = ({ searchParams }) => {
                                                 borderRadius:
                                                     '0 16px 16px 16px',
                                             }}
-                                            className=" bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black"
+                                            className="bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black"
                                         >
                                             {msg.message}
                                         </div>
@@ -375,7 +369,7 @@ const AiChat = ({ searchParams }) => {
                                                 borderRadius:
                                                     '16px 16px 0 16px',
                                             }}
-                                            className=" drop-shadow-sm bg-white px-5 py-2 mx-2  max-w-[75%] text-base font-light text-black"
+                                            className="drop-shadow-sm bg-white px-5 py-2 mx-2 max-w-[75%] text-base font-light text-black"
                                         >
                                             {msg.message}
                                         </div>
@@ -414,13 +408,12 @@ const AiChat = ({ searchParams }) => {
                     <Image src={Button} alt="button" />
                 </div>
 
-                {/* Input Area */}
                 <div style={{ background: '#F4FBFB', minHeight: '57px' }}>
                     <div
                         ref={inputAreaRef}
-                        className={`input-area  ${
+                        className={`input-area ${
                             !isKeyboardOpen && 'fixed bottom-0'
-                        } flex w-[95%] ml-3 py-2 h-auto items-end border border-[#E6E6E6] justify-center gap-4 px-6  bg-white`}
+                        } flex w-[95%] ml-3 py-2 h-auto items-end border border-[#E6E6E6] justify-center gap-4 px-6 bg-white`}
                         style={{
                             minHeight: '40px',
                             border: '2px solid #E8E8E8',
@@ -436,11 +429,10 @@ const AiChat = ({ searchParams }) => {
                             ref={textareaRef}
                             value={message}
                             onFocus={handleFocus}
-                            // onBlur={handleBlur}
                             onChange={(e) => setMessage(e.target.value)}
                             type="text"
                             placeholder="Type a message"
-                            className="w-full h-auto flex-1  outline-none focus:outline-none resize-none bg-none no-scrollbar"
+                            className="w-full h-auto flex-1 outline-none focus:outline-none resize-none bg-none no-scrollbar"
                             style={{
                                 height: '40px',
                                 padding: '8px 0',
@@ -459,9 +451,6 @@ const AiChat = ({ searchParams }) => {
                         ) : (
                             <div
                                 onClick={() => {
-                                    // if (textareaRef.current) {
-                                    //   textareaRef.current.blur();
-                                    // }
                                     makeApiCall();
                                 }}
                                 className="w-10 h-10 flex justify-center items-center cursor-pointer"
