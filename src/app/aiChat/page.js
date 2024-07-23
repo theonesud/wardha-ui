@@ -107,20 +107,23 @@ const AiChat = ({ searchParams }) => {
         setMessage('');
         setLoading(true);
 
-        const res = await fetch('http://localhost:8000/assistant/ask', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                thread_id: threadId,
-                question: userMessage,
-                chat_history: messagesList.map((msg) => ({
-                    role: msg.type === 0 ? 'user' : 'assistant',
-                    content: msg.message,
-                })),
-            }),
-        });
+        const res = await fetch(
+            'https://walrus-app-hs2a9.ondigitalocean.app/assistant/ask',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    thread_id: threadId,
+                    question: userMessage,
+                    chat_history: messagesList.map((msg) => ({
+                        role: msg.type === 0 ? 'user' : 'assistant',
+                        content: msg.message,
+                    })),
+                }),
+            }
+        );
         const data = await res.json();
         setLoading(false);
         setThreadId(data.thread_id || threadId);
@@ -181,7 +184,7 @@ const AiChat = ({ searchParams }) => {
         const formData = new FormData();
         formData.append('file', file, 'captured.jpeg');
 
-        fetch('http://localhost:8000/assistant/scan', {
+        fetch('https://walrus-app-hs2a9.ondigitalocean.app/assistant/scan', {
             method: 'POST',
             body: formData,
         })
