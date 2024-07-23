@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import backArrow from '../assets/svg/barrow.svg';
+import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
 import refresh from '../assets/svg/refresh.svg';
 import cam from '../assets/svg/cam.svg';
@@ -101,51 +102,29 @@ const AiChat = ({ searchParams }) => {
             textareaRef.current.focus();
         }
 
-        if (showResponse) {
-            const res = await fetch('http://localhost:8000/assistant/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    thread_id: threadId,
-                    question: JSON.stringify(messageText),
-                    chat_history: messagesList.map((msg) => ({
-                        role: msg.type === 0 ? 'user' : 'assistant',
-                        content: msg.message,
-                    })),
-                }),
-            });
-            const data = await res.json();
-            setThreadId(data.thread_id || threadId);
-        } else {
-            const userMessage = messageText || message;
-            setMessagesList([
-                ...messagesList,
-                { type: 0, message: userMessage },
-            ]);
-            setMessage('');
-            setLoading(true);
+        const userMessage = messageText || message;
+        setMessagesList([...messagesList, { type: 0, message: userMessage }]);
+        setMessage('');
+        setLoading(true);
 
-            const res = await fetch('http://localhost:8000/assistant/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    thread_id: threadId,
-                    question: userMessage,
-                    chat_history: messagesList.map((msg) => ({
-                        role: msg.type === 0 ? 'user' : 'assistant',
-                        content: msg.message,
-                    })),
-                }),
-            });
-            const data = await res.json();
-            setLoading(false);
-            setThreadId(data.thread_id || threadId);
-            addBotMessage(data.response, data.suggestions, data?.products);
-        }
+        const res = await fetch('http://localhost:8000/assistant/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                thread_id: threadId,
+                question: userMessage,
+                chat_history: messagesList.map((msg) => ({
+                    role: msg.type === 0 ? 'user' : 'assistant',
+                    content: msg.message,
+                })),
+            }),
+        });
+        const data = await res.json();
+        setLoading(false);
+        setThreadId(data.thread_id || threadId);
+        addBotMessage(data.response, data.suggestions, data?.products);
     };
 
     const handleRefresh = () => {
@@ -179,18 +158,13 @@ const AiChat = ({ searchParams }) => {
                 currentIndex++;
             } else {
                 clearInterval(typingEffect);
+                // Ensure both message and image are shown
+                setMessagesList((prevMessagesList) => [
+                    ...prevMessagesList.slice(0, -1),
+                    botMessage,
+                ]);
             }
         }, 3);
-
-        if (botMessage?.image) {
-            console.log(botMessage.image, 'botMessage');
-            makeApiCall(botMessage.image, true);
-        }
-
-        setMessagesList((prevMessagesList) => [
-            ...prevMessagesList,
-            botMessage,
-        ]);
     };
 
     const handleCapture = (file) => {
@@ -212,7 +186,6 @@ const AiChat = ({ searchParams }) => {
             body: formData,
         })
             .then((response) => {
-                console.log(response, 'lkfjdslkf');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -220,7 +193,6 @@ const AiChat = ({ searchParams }) => {
             })
             .then((res) => {
                 makeApiCall(res, true);
-                console.log(res, 'lkfjdslkf');
                 setLoading(false);
                 setThreadId(res.thread_id || threadId);
                 addBotMessage(
@@ -236,7 +208,6 @@ const AiChat = ({ searchParams }) => {
                         },
                     ]
                 );
-                console.log('Scan result:', res);
             })
             .catch((error) => {
                 console.error('Error during file upload:', error);
@@ -298,7 +269,20 @@ const AiChat = ({ searchParams }) => {
                                             Wardah AI Assistant -
                                         </div>
                                     </div>
-                                    {msg.image && msg.image.length > 0 ? (
+                                    {msg.message && (
+                                        <div
+                                            style={{
+                                                borderRadius:
+                                                    '0 16px 16px 16px',
+                                            }}
+                                            className="bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black"
+                                        >
+                                            <ReactMarkdown>
+                                                {msg.message}
+                                            </ReactMarkdown>
+                                        </div>
+                                    )}
+                                    {msg.image && msg.image.length > 0 && (
                                         <div className="flex flex-col gap-2 mx-5 my-2">
                                             <div className="flex flex-row flex-wrap gap-6">
                                                 {msg.image.map((img, idx) => (
@@ -327,18 +311,7 @@ const AiChat = ({ searchParams }) => {
                                                 ))}
                                             </div>
                                         </div>
-                                    ) : (
-                                        <div
-                                            style={{
-                                                borderRadius:
-                                                    '0 16px 16px 16px',
-                                            }}
-                                            className="bg-aiChatBg px-4 py-2 mx-5 my-2 max-w-[80%] text-base font-light text-black"
-                                        >
-                                            {msg.message}
-                                        </div>
                                     )}
-
                                     {msg.suggestions &&
                                         msg.suggestions.length > 0 && (
                                             <div className="flex flex-wrap gap-2 mx-5 max-w-[80%]">
